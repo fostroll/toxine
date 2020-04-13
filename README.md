@@ -57,7 +57,7 @@ start *Python* interpreter and execute:
 
 ## Examples
 
-You can find them in the directory `examples` of our ***Toxic*** github
+You can find them in the directory `examples` of our ***Toxine*** github
 repository.
 
 ## License
