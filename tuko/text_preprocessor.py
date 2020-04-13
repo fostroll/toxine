@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Toxic project: Text Preprocessing pipeline
+# Tuko project: Text Preprocessing pipeline
 #
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details

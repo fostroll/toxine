@@ -1,5 +1,5 @@
 <div align="right"><strong>RuMor: Russian Morphology project</strong></div>
-<h2 align="center">Toxic: a tiny python NLP library for Russian text preprocessing</h2>
+<h2 align="center">Tuko: a tiny python NLP library for Russian text preprocessing</h2>
 
 ## Text tokenization and preprocessin tools
 
@@ -10,7 +10,7 @@ highly dirty, and return it's cleaned tokenized version in
 
 To create `TextPreprocessor`, invoke:
 ```python
-from toxic import TextPreprocessor
+from tuko import TextPreprocessor
 tp = TextPreprocessor()
 ```
 
@@ -213,7 +213,7 @@ like *"Это случилось в 1887-м году."* will be converted after 
 ```
 
 The example of usage **post_tag** param in `do_all` method along with new tags
-definition you can find in the `examples` directory of the ***Toxic*** github
+definition you can find in the `examples` directory of the ***Tuko*** github
 repository (script `tokenize_post_tag.py`).
 
 If you want, with the `register_tag()` method you can redefine **masks** of

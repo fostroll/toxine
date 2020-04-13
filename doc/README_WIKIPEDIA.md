@@ -1,14 +1,14 @@
 <div align="right"><strong>RuMor: Russian Morphology project</strong></div>
-<h2 align="center">Toxic: a tiny python NLP library for Russian text preprocessing</h2>
+<h2 align="center">Tuko: a tiny python NLP library for Russian text preprocessing</h2>
 
 ## Wrapper for tokenized *Wikipedia*
 
 The package `wikipedia_utils` contains tools to simplify usage *Wikipedia* in
-NLP tasks. So far, ***Toxic*** promotes only preprocessing for texts in
+NLP tasks. So far, ***Tuko*** promotes only preprocessing for texts in
 Russian. Thus, it supports only Russian part of *Wikipedia*.
 
 ```python
-from toxic.wikipedia_utils import TokenizedWikipedia
+from tuko.wikipedia_utils import TokenizedWikipedia
 TokenizedWikipedia.articles()
 ```
 The method return articles in

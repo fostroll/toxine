@@ -2,19 +2,19 @@ import os
 from setuptools import setup, find_packages
 
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
-version_file_contents = open(os.path.join(SCRIPT_DIR, 'toxic/_version.py'),
+version_file_contents = open(os.path.join(SCRIPT_DIR, 'tuko/_version.py'),
                              'rt', encoding='utf-8').read()
 VERSION = version_file_contents.strip()[len('__version__ = "'):-1]
 
 setup(
-    name='toxic',
+    name='tuko',
     version=VERSION,
     description='Tiny preprocessor for Russian text',
     long_description=open('README.md', 'rt', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
     author='Sergei Ternovykh',
     author_email='fostroll@gmail.com',
-    url='https://github.com/fostroll/toxic',
+    url='https://github.com/fostroll/tuko',
     license='BSD',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
