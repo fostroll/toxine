@@ -10,7 +10,7 @@ tokenization texts in *Russian*. Also, it includes preliminary entity tagging.
 Highlights are:
 
 * Extracting emojies, emails, dates, phones, urls, html/xml fragments etc.
-* Taging/removing tokens with inallowed symbols
+* Tagging/removing tokens with inallowed symbols
 * Normalizing of punctuation
 * Tokenization (via *NLTK*)
 * Russan *Wikipedia* tokenizer
