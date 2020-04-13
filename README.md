@@ -57,9 +57,11 @@ start *Python* interpreter and execute:
 
 ## Examples
 
-You can find them in the directory `examples` of our github ***Toxine*** repository.
+You can find them in the directory `examples` of our ***Toxic*** github
+repository.
 
 ## License
 
 ***Toxine*** is released under the BSD License. See the
-[LICENSE](https://github.com/fostroll/toxine/blob/master/LICENSE) file for more details.
+[LICENSE](https://github.com/fostroll/toxine/blob/master/LICENSE) file for
+more details.

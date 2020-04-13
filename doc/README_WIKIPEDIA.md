@@ -26,7 +26,7 @@ The wrapper is successor of
 so it supports its other methods (`titles()` and `templates()`) as well. But
 they stay as were, without any additional processing.
 
-If you need your *Wikipedis* dump blends in with some speech recognition
+If you need your *Wikipedia* dump blends in with some speech recognition
 software output, just use that
 [***Corpuscula***](https://github.com/fostroll/corpuscula) functionality:
 ```python

@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
-version_file_contents = open(os.path.join(SCRIPT_DIR, 'tuko/_version.py'),
+version_file_contents = open(os.path.join(SCRIPT_DIR, 'toxine/_version.py'),
                              'rt', encoding='utf-8').read()
 VERSION = version_file_contents.strip()[len('__version__ = "'):-1]
 
