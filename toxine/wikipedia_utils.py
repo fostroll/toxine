@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Tuko project: Wrapper for tokenized Wikipedia
+# Toxine project: Wrapper for tokenized Wikipedia
 #
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
@@ -9,7 +9,7 @@ Wrapper to get Russian part of Wikipedia tokenized in CONLL-U format.
 
 from corpuscula.utils import LOG_FILE, print_progress
 from corpuscula.wikipedia_utils import Wikipedia
-from tuko.text_preprocessor import TextPreprocessor
+from toxine.text_preprocessor import TextPreprocessor
 
 class TokenizedWikipedia(Wikipedia):
     """Wrapper for Wikipedia corpus"""

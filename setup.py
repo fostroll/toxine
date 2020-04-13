@@ -7,14 +7,14 @@ version_file_contents = open(os.path.join(SCRIPT_DIR, 'tuko/_version.py'),
 VERSION = version_file_contents.strip()[len('__version__ = "'):-1]
 
 setup(
-    name='tuko',
+    name='Toxine',
     version=VERSION,
     description='Tiny preprocessor for Russian text',
     long_description=open('README.md', 'rt', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
     author='Sergei Ternovykh',
     author_email='fostroll@gmail.com',
-    url='https://github.com/fostroll/tuko',
+    url='https://github.com/fostroll/toxine',
     license='BSD',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers

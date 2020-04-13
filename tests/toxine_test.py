@@ -12,7 +12,7 @@ sys.path.append('../')
 from tests._test_support import WORK_DIR, WORK_FNAME, \
                                 bprint, eprint, safe_run, check_res
 #from corpuscula.corpus_utils import syntagrus
-from tuko import TextPreprocessor
+from toxine import TextPreprocessor
 
 WORK_FNAME = os.path.join(WORK_DIR, 'test$')
 

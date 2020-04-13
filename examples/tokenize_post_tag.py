@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Tuko project: Text Preprocessing pipeline
+# Toxine project: Text Preprocessing pipeline
 #
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
@@ -11,7 +11,7 @@ import os
 import re
 
 from corpuscula.corpus_utils import syntagrus
-from tuko import TextPreprocessor
+from toxine import TextPreprocessor
 
 
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
