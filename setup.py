@@ -49,6 +49,7 @@ setup(
     packages=find_packages(exclude=['data', 'doc', 'examples', 'scripts',
                                     'tests']),
     install_requires=[
+        'corpuscula',
         'nltk',
         'pymorphy2'
     ],
