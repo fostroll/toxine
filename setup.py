@@ -7,7 +7,7 @@ version_file_contents = open(os.path.join(SCRIPT_DIR, 'toxine/_version.py'),
 VERSION = version_file_contents.strip()[len('__version__ = "'):-1]
 
 setup(
-    name='Toxine',
+    name='toxine',
     version=VERSION,
     description='Tiny preprocessor for Russian text',
     long_description=open('README.md', 'rt', encoding='utf-8').read(),
