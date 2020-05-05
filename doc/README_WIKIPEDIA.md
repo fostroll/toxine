@@ -3,7 +3,7 @@
 
 ## Wrapper for tokenized *Wikipedia*
 
-The package `wikipedia_utils` contains tools to simplify usage *Wikipedia* in
+The package `wikipedia_utils` contains tools to simplify *Wikipedia* usage in
 NLP tasks. So far, ***Toxine*** promotes only preprocessing for texts in
 Russian. Thus, it supports only Russian part of *Wikipedia*.
 
@@ -24,10 +24,10 @@ Conllu.save(TokenizedWikipedia().articles(), 'wiki.conllu', fix=False,
 The wrapper is successor of
 [***Corpuscula*** *Wikipedia* Wrapper](https://github.com/fostroll/corpuscula/blob/master/doc/README_WIKIPEDIA.md),
 so it supports its other methods (`titles()` and `templates()`) as well. But
-they stay as were, without any additional processing.
+they stay as they were, without any additional processing.
 
-If you need your *Wikipedia* dump blends in with some speech recognition
-software output, just use that
+If you need your *Wikipedia* dump to blend in with some speech recognition
+software output, please use 
 [***Corpuscula***](https://github.com/fostroll/corpuscula) functionality:
 ```python
 from corpuscula import Conllu
