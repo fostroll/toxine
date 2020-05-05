@@ -5,7 +5,7 @@
 
 The class `TextPreprocessor` contains a lot of bells and whistles for
 organizing text preprocessing pipeline. It takes a simple text that may be
-highly dirty, and return it's cleaned tokenized version in
+highly noisy, and returns its cleaned tokenized version in
 [*CONLL-U*](https://universaldependencies.org/format.html) format.
 
 To create `TextPreprocessor`, invoke:
@@ -41,14 +41,14 @@ use for that the `load_pars()` method:
 tp.load_pars(path, encoding='utf-8-sig', eop=r'\n', doc_id=None)
 ```
 Here, you should specify **path** to a text file you want to process. For
-each loaded file `TextPreprocessor` creates separate *document* unless you
+each loaded file `TextPreprocessor` creates a separate *document* unless you
 specify **doc_id**. The *document* will be filled by *paragraphs* extracted
 from the file by applying **eop** param.
 
 **eop** is a regex or a `callable` for splitting a text. If `None`, then all
-the text will be placed into one *paragraph*. Default is *LF* symbol.
+the texts will be placed into one *paragraph*. Default is *LF* symbol.
 
-**doc_id** is the *ID* of the *document* you want to be appended. Usually, you
+**doc_id** is the *ID* of the *document* that you want to append. Usually, you
 don't need it. You just feed your file(s) to `TextPreprocessor` and save the
 result to one *CONLL-U* file in the feeding order. In that case, each file
 will be tagged as separated *document*, and you have no reason to keep *ID* of
@@ -77,7 +77,7 @@ tp.clear_corpus()
 ### Additional tools for loading
 
 If you already have your *paragraphs* in memory as text (tokenized or not),
-you can load them by means
+you can load them by means of
 ```
 tp.new_par(text, doc_id=None)
 ```
@@ -90,7 +90,7 @@ tp.new_pars(pars, eop=r'\n', doc_id=None)
 Here, **pars** may be either a text data or a `list` of already splitted
 *paragraphs*. In the latter case, param **eop** is ignored.
 
-If you want full control, you can firstly just split your text:
+If you want full control, you can just split your text first:
 ```
 pars = TextPreprocessor.text_to_pars(text, eop=r'\n')
 ```
@@ -99,8 +99,8 @@ Next, you can check and edit the result of splitting, and then load it via
 
 ### Preprocessing
 
-Normally, you will use the only one method that makes all work: `do_all()`.
-However, that method have a lot of parameters to control its behavior:
+Normally, you will use only one method that makes all the work: `do_all()`.
+However, this method has a lot of parameters to control its behavior:
 ```python
 tp.do_all(doc_id=None, chars_allowed=None, unescape_html=True, pre_tag=None,
           tag_emoji=True, tag_xml=True, tag_email=True, tag_uri=True,
@@ -109,26 +109,26 @@ tp.do_all(doc_id=None, chars_allowed=None, unescape_html=True, pre_tag=None,
           islf_eos=True, istab_eos=True, ignore_case=False, silent=False,
           sent_no=0, tags={})
 ```
-The method execute all preprocessing including sentence and word tokenization,
-normalizing of punctuation (if need), extracting some entities detected via
+The method executes all preprocessing including sentence and word tokenization,
+normalizing punctuation (if needed), extracting some entities detected via
 regexes, etc.
 
-If **doc_id** is specified, metod affects only on the *document* with that
+If **doc_id** is specified, metod affects only the *document* with that
 *ID*. Elsewise, all the corpus will be processed.
 
-**chars_allowed**: charset we mean valid. Tokens with others characters will
-be processed as *UNK* tokens. By default, **chars_allowed** contain character
-set: **$€%&~№0-9A-Za-zЁА-Яёа-я’²³°()/"\'«»„“+.,:;!?-**. You can change it by
-any other set that can be plased inside `[]` regex.
+**chars_allowed**: charset considered valid. Tokens with others characters will
+be processed as *UNK* tokens. By default, **chars_allowed** contains the following
+character set: **$€%&~№0-9A-Za-zЁА-Яёа-я’²³°()/"\'«»„“+.,:;!?-**. You can change or replace
+it by any other chatset placed inside `[]` regex.
 
 **unescape_html**: do we need to make back transformation from escaped html.
 May be `True` (default), `False` or `callable`. The signature of the
 `callable` for this method: `unescape_html(text: str) -> str`.
 
-**pre_tag**: external tagger (or just preprocessor) that will be run before
+**pre_tag**: external tagger (or just a preprocessor) that will be run before
 all internal taggers. The signature: `pre_tag(text: str, delim: str) -> str`.
 Here, `delim` is a character to separate tag signature. For example, if we've
-got `'|'` as `delim` and want to tag all numbers, then for the `text` *'I
+got `'|'` as `delim` and we want to tag all numbers, then for the `text` *'I
 have 8 brothers and only one sister'* we should return smth like *'I have
 **8|EntityNumber** brothers and only **one|EntityNumber** sister'*. Default
 value is `None`: we don't need external preprocessing.
@@ -136,29 +136,29 @@ value is `None`: we don't need external preprocessing.
 **tag_emoji**, **tag_xml**, **tag_email**, **tag_uri**, **tag_phone**,
 **tag_date**, **tag_hashtag**, **tag_nametag**. Internal preprocessors that we
 have. They will be started exactly in that order. Each of the params can be
-either `True` (default: we want preprocessor to be runned), `False` (we don't
-want that) or `callable`: we want to run our external preprocessor instead.
+either `True` (default: run the preprocessor), `False` (do not run the 
+preprocessor) or `callable`: we want to run our external preprocessor instead.
 In the latter case, the signature of your callback function is the same as for
 **pre_tag**.
 
 **post_tag**: external tagger we want to run after all internal taggers. It is
 the same as for **pre_tag**. Default is `None` (we don't need it).
 
-**split_unk**: if disallowed chars placed only at the begin or/and at the end
+**split_unk**: if unallowed chars are met only at the beginning or/and at the end
 of the token then split that token and mark as *UNK* only the part with
-disallowed characters. Default is `False`.
+unallowed characters. Default is `False`.
 
-**tag_unk**: add special tag for the tokens with disallowed chars. Default is
+**tag_unk**: add a special tag for the tokens with unallowed chars. Default is
 `True`, i.e. tokens will be tagged. If `False`, that tokens will be silently
 removed from the text.
 
-**norm_punct**: normalize punctuations. It's not a *correction*, it's just
-*normalizing*, i.e. reduction user's punctuation to some appropriate form with
-finite variants of punctiation uses. You won't apply this possibility if the
-text sourse has already good grammar (*Wikipedia*, news papers, etc.). But
-if your text is punctuation dirty (chats' or forums' talks), the method is
-usefull. Default is `False`. You can't replace it with your `callable`. If you
-need, you can do your normalizing in the **post_tag** method.
+**norm_punct**: normalize punctuation. It's not a *correction*, it's just
+*normalizing*, i.e. reduction of user's punctuation to some appropriate form with
+finite variants of punctiation uses. It is not necessary to use this methos if the
+text source already has a good grammar (*Wikipedia*, newspapers, etc.). But
+if your text is punctuation-dirty (texts from social networks, chats or forums), 
+the method is useful. Default is `False`. You can't replace it with your `callable`. 
+If needed, you can do your normalizing in the **post_tag** method.
 
 If **norm_punct** is `True`, you can specify some additional params for it:
 
@@ -176,10 +176,10 @@ Next params are used regardless of **norm_punct**:
 **silent** (`True` / `False` (default)): suppress log.
 
 **sent_no** (`int`, default is `0`): init value for the progress indicator
-(has meaning if silent is `False`)
+(has effect if silent is `False`)
 
 **tags**: (`dict(tag, value)`) storage for the tags found. Sometimes, you want
-to split your corpus on several parts (because of its size, for example) and
+to split your corpus in several parts (because of large size, for example) and
 process each part independently. With that, you want to get consistent
 numeration of found tags for the whole corpus. In that case, just create an
 empty `dict` and pass it to this method with every call. Each time the method
@@ -188,7 +188,7 @@ will continue preceding numerations.
 ### External taggers implementation
 
 If you want to have your own tags to be supported (for you could use them in
-**pre_tag** and/or **post_tag**), you should to register them first:
+**pre_tag** and/or **post_tag**), you should register them first:
 ```python
 eff_tag = tp.register_tag(tag, mask=None)
 ```
@@ -212,23 +212,23 @@ Thus, if your **pre_tag** or **post_tag** were embodied correctly, method
 5	.	[...]	-
 ```
 
-The example of usage **post_tag** param in `do_all` method along with new tags
-definition you can find in the `examples` directory of the ***Toxine*** github
+The example of using **post_tag** param in `do_all` method along with new tags
+definition can be found in the `examples` directory of the ***Toxine*** github
 repository (script `tokenize_post_tag.py`).
 
-If you want, with the `register_tag()` method you can redefine **masks** of
+If necessary, the `register_tag()` method allows you to redefine **masks** of
 internal tags. E.g.:
 ```python
 tp.register_tag('EntityPhone', 'телефон')
 ```
 
-All current **mask** mappings is kept in `tp.TAG_MASKS` dictionary, but the
-tags there represented in the form already adjusted for our pipeline. Better
+All current **mask** mappings are kept in `tp.TAG_MASKS` dictionary, but the
+tags there are represented in the form already adjusted for our pipeline. Better
 don't edit it directly.
 
 ### Saving the result
 
-After processing, you'd like to get the result:
+After processing, you can save the results:
 ```python
 sents = tp.save(path=None, doc_id=None, add_global_columns=False)
 ```
@@ -237,7 +237,7 @@ Otherwise, the method will return all of them.
 
 The result is returned in *Parsed CONLL-U* format. If you set
 **add_global_columns** to `True`, the meta variable *global.columns* will be
-added to the result for make it consistent with the
+added to the result to make it consistent with the
 [*CONLL-U Plus*](https://universaldependencies.org/format.html) format.
 
 To save the result as *CONLL-U* file, just specify the name of the resulting
@@ -245,8 +245,8 @@ file in the **path** param.
 
 ### Supplements
 
-If you have a text piece in some variable and you need just to preprocess and
-tokenize it without any addition document processing, you can do it in one
+If you have a text piece in some variable and you need to just preprocess and
+tokenize it without any additional text processing, you can do it in one
 line like this:
 ```python
 sents = TextPreprocessor().process_text(text, **kwargs)
@@ -260,7 +260,7 @@ The **\*\*kwargs** params is exactly params of the `do_all()` method except
 **NB:** you have to create the instance of `TextPreprocessor`. The method
 `process_text` is not static.
 
-Normalizing punctuation also can be done without full processing:
+Normalizing punctuation can also be done without full text processing:
 ```python
 text = TextPreprocessor().norm_punct(text, islf_eos=True, istab_eos=True,
                                      ignore_case=False)
@@ -277,9 +277,9 @@ sents = TextPreprocessor.sent_tokenize(text, kill_empty=True)
 tokens = TextPreprocessor.word_tokenize(text)
 ```
 Hovewer, now, both of them are simple wrappers for *NLTK* methods of same
-name, because after preprocessing they works pretty well.
+name, because after preprocessing they work pretty well.
 
-Param **kill_empty** allow you not to add to the return empty sentences.
+Param **kill_empty** allows you not to add empty sentences to the return.
 
 Also, we have a wrapper that makes all tokenization at once:
 ```python
