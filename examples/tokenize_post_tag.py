@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Toxine project: Text Preprocessing pipeline
+# Toxine project
 #
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
