@@ -270,7 +270,7 @@ class TextPreprocessor:
 
         :param doc_id: id of the document. If None then uuid will be used
         :type doc_id: str
-        :param metadata: CONLL-U metadata that will be returned in document
+        :param metadata: CoNLL-U metadata that will be returned in document
                          header
         :type metadata: OrderedDict
         :return: id of the document created
@@ -1171,7 +1171,7 @@ class TextPreprocessor:
                   file=LOG_FILE)
 
     def save(self, path=None, doc_id=None, add_global_columns=False):
-        """Save corpus to CONLL-U format.
+        """Save corpus to CoNLL-U format.
 
         :param path: path to the file to store result to. If you don't need to
                      store result on disk, keep it None
@@ -1180,9 +1180,9 @@ class TextPreprocessor:
                        will be processed
         :type doc_id: str
         :type add_global_columns: if True, the first line of output will be
-                                  CONLL-U Plus "global.columns" metadata
+                                  CoNLL-U Plus "global.columns" metadata
         :return: the result of the processing
-        :rtype: Parsed CONLL-U
+        :rtype: Parsed CoNLL-U
         """
         assert doc_id is None or doc_id in self._corpus, \
             'ERROR: document "{}" has not exist'.format(doc_id)

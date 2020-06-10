@@ -6,7 +6,7 @@
 The class `TextPreprocessor` contains a lot of bells and whistles for
 organizing text preprocessing pipeline. It takes a simple text that may be
 highly noisy, and returns its cleaned tokenized version in
-[*CONLL-U*](https://universaldependencies.org/format.html) format.
+[*CoNLL-U*](https://universaldependencies.org/format.html) format.
 
 To create `TextPreprocessor`, invoke:
 ```python
@@ -22,7 +22,7 @@ tp = TextPreprocessor(cdict_restore_from='cdict.pickle')
 ```
 
 Also, you can create (and save, if you'll specify **save_to** param) *Corpus
-Dictionary* for `TextPreprocessor` from any *CONLL-U* corpus you prefer.
+Dictionary* for `TextPreprocessor` from any *CoNLL-U* corpus you prefer.
 E.g., you can use `TextPreprocessor` with *SynTagRus*:
 ```python
 from corpuscula.corpus_utils import syntagrus
@@ -50,7 +50,7 @@ the texts will be placed into one *paragraph*. Default is *LF* symbol.
 
 **doc_id** is the *ID* of the *document* that you want to append. Usually, you
 don't need it. You just feed your file(s) to `TextPreprocessor` and save the
-result to one *CONLL-U* file in the feeding order. In that case, each file
+result to one *CoNLL-U* file in the feeding order. In that case, each file
 will be tagged as separated *document*, and you have no reason to keep *ID* of
 them. But if you want some additional functionality (append *documents*, for
 example, or save them to different files), you must firstly create each
@@ -58,10 +58,10 @@ example, or save them to different files), you must firstly create each
 ```python
 doc_id = tp.new_doc(self, doc_id=None, metadata=None)
 ```
-Param **metadata** allows you to specify *CONLL-U* *metadata* that will be
+Param **metadata** allows you to specify *CoNLL-U* *metadata* that will be
 inserted to the document header. **metadata** must be of `OrderedDict` type
 as you can see in
-[*Parsed CONLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
+[*Parsed CoNLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
 description.
 
 If you know *ID*, you can remove a certain *document*:
@@ -193,7 +193,7 @@ If you want to have your own tags to be supported (for you could use them in
 eff_tag = tp.register_tag(tag, mask=None)
 ```
 Here, **tag** is the signature for your tag that will be placed to the *MISC*
-*CONLL-U* field as follows. E.g. you want to mark some tokens as *EntityYear*.
+*CoNLL-U* field as follows. E.g. you want to mark some tokens as *EntityYear*.
 Then, you should firstly register the *EntityYear* tag:
 ```python
 eff_tag = tp.register_tag('EntityYear', mask='year')
@@ -235,12 +235,12 @@ sents = tp.save(path=None, doc_id=None, add_global_columns=False)
 Use **doc_id** if you want to get only one certain document preprocessed.
 Otherwise, the method will return all of them.
 
-The result is returned in *Parsed CONLL-U* format. If you set
+The result is returned in *Parsed CoNLL-U* format. If you set
 **add_global_columns** to `True`, the meta variable *global.columns* will be
 added to the result to make it consistent with the
-[*CONLL-U Plus*](https://universaldependencies.org/format.html) format.
+[*CoNLL-U Plus*](https://universaldependencies.org/format.html) format.
 
-To save the result as *CONLL-U* file, just specify the name of the resulting
+To save the result as *CoNLL-U* file, just specify the name of the resulting
 file in the **path** param.
 
 ### Supplements
@@ -251,7 +251,7 @@ line like this:
 ```python
 sents = TextPreprocessor().process_text(text, **kwargs)
 ```
-You'll get a `list` of sentences in *Parsed CONLL-U* format, but its
+You'll get a `list` of sentences in *Parsed CoNLL-U* format, but its
 *metadata* will contain only *text* meta variables.
 
 The **\*\*kwargs** params is exactly params of the `do_all()` method except

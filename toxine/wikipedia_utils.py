@@ -4,7 +4,7 @@
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
 """
-Wrapper to get Russian part of Wikipedia tokenized in CONLL-U format.
+Wrapper to get Russian part of Wikipedia tokenized in CoNLL-U format.
 """
 
 from corpuscula.utils import LOG_FILE, print_progress
@@ -15,7 +15,7 @@ class TokenizedWikipedia(Wikipedia):
     """Wrapper for Wikipedia corpus"""
 
     def articles(self, silent=None):
-        """Return tokenized Wikipedia articles in CONLL-U format"""
+        """Return tokenized Wikipedia articles in CoNLL-U format"""
         silent = self._silent if silent is None else silent
         tp = TextPreprocessor()
 

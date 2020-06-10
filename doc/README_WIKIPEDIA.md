@@ -12,7 +12,7 @@ from toxine.wikipedia_utils import TokenizedWikipedia
 TokenizedWikipedia.articles()
 ```
 The method return articles in
-[*Parsed CONLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
+[*Parsed CoNLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
 format, that can be saved to
 [CONLL-U](https://universaldependencies.org/format.html) file with:
 ```python
