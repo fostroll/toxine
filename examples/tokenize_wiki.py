@@ -5,7 +5,7 @@
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
 """
-Example: Tokenize Wikipedia and save articles as CONLL-U.
+Example: Tokenize Wikipedia and save articles as CoNLL-U.
 """
 from corpuscula import Conllu
 from corpuscula.wikipedia_utils import download_wikipedia

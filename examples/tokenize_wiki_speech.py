@@ -6,7 +6,7 @@
 # License: BSD, see LICENSE for details
 """
 Example: Tokenize Wikipedia and make its articles looks like some speech
-recognition software output. Save the result as CONLL-U.
+recognition software output. Save the result as CoNLL-U.
 """
 from corpuscula import Conllu
 from corpuscula.wikipedia_utils import download_wikipedia
