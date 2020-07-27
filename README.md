@@ -9,8 +9,8 @@ A part of ***RuMor*** project. It contains pipeline for preprocessing and
 tokenization texts in *Russian*. Also, it includes preliminary entity tagging.
 Highlights are:
 
-* Extracting emojies, emails, dates, phones, urls, html/xml fragments etc.
-* Tagging/removing tokens with inallowed symbols
+* Extracting emojis, emails, dates, phones, urls, html/xml fragments etc.
+* Tagging/removing tokens with unallowed symbols
 * Normalizing of punctuation
 * Tokenization (via *NLTK*)
 * Russan *Wikipedia* tokenizer

@@ -4,8 +4,8 @@
 # Copyright (C) 2019-present by Sergei Ternovykh
 # License: BSD, see LICENSE for details
 """
-Tag emojies, emails, dates, phones, urls, html/xml fragments etc.
-Tag tokens with inallowed symbols.
+Tag emojis, emails, dates, phones, urls, html/xml fragments etc.
+Tag tokens with unallowed symbols.
 Punctuation correction.
 Tokenization.
 """
@@ -378,7 +378,7 @@ class TextPreprocessor:
         return unescape(text)
 
     def _preprocess_emoji_default(self, text):
-        """Depending on CHAR_DELIM symbol, replace emojies of type ":-\" to
+        """Depending on CHAR_DELIM symbol, replace emojis of type ":-\" to
         ":-/" (for '\\') or ":-|" to ":-!" (for '|')"""
         return re_sub(r'(^|\s|' + self.CHAR_ALNUM
                     + r')(:-?\\+)(\s|$)', r'\g<1>:-/\g<3>', text) \
@@ -401,10 +401,10 @@ class TextPreprocessor:
                    .replace(self.CHAR_DELIM, sub)
 
     def _tag_emoji(self, text):
-        """NOTE: Some emojies may become corrupted after ``remove_delims()``.
+        """NOTE: Some emojis may become corrupted after ``remove_delims()``.
         You need to change them prior. For default *delim* symbol just run
-        ``preprocess_emojies_default()`` before ``remove_delims()``
-        TODO: Need to add more complete emojies support"""
+        ``preprocess_emoji_default()`` before ``remove_delims()``
+        TODO: Need to add more complete emojis support"""
         text = self.RE_EMOJI.sub(
             lambda x:
                 (x.group(1) + ' ' + x.group(2) + self.TAG_EMOJI + ' '
