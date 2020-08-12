@@ -318,7 +318,7 @@ class TextPreprocessor:
             'ERROR: document "{}" has not exist'.format(doc_id)
         doc = self._corpus[doc_id]
         pars_ = doc.setdefault('pars', [])
-        par_no1 = len(pars)
+        par_no1 = len(pars_)
         par_no2 = par_no1 - 1
         for i, text in enumerate(
             self.text_to_pars(pars, eop=eop) if isinstance(pars, str) else
@@ -332,6 +332,7 @@ class TextPreprocessor:
                 pars_.append({'text': self.RE_LF2.sub(
                     r'\g<1> \g<2>', self.RE_LF.sub(r'\g<1> ', text)
                 ).replace('\n', '. ').replace('\r', '')})
+                par_no2 += 1
         return (par_no1, par_no2) if par_no2 >= par_no1 else (None, None)
 
     def load_pars(self, path, encoding='utf-8-sig', eop=r'\n', doc_id=None):
