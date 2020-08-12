@@ -11,7 +11,7 @@ Highlights are:
 
 * Extracting emojis, emails, dates, phones, urls, html/xml fragments etc.
 * Tagging/removing tokens with unallowed symbols
-* Normalizing of punctuation
+* Normalizing punctuation
 * Tokenization (via *NLTK*)
 * Russan *Wikipedia* tokenizer
 
