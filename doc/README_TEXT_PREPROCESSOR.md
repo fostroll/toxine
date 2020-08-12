@@ -249,7 +249,7 @@ If you have a text piece in some variable and you need to just preprocess and
 tokenize it without any additional text processing, you can do it in one
 line like this:
 ```python
-sents = TextPreprocessor().process_text(text, **kwargs)
+sents = tp.process_text(text, **kwargs)
 ```
 You'll get a `list` of sentences in *Parsed CoNLL-U* format, but its
 *metadata* will contain only *text* meta variables.
@@ -262,8 +262,7 @@ The **\*\*kwargs** params is exactly params of the `do_all()` method except
 
 Normalizing punctuation can also be done without full text processing:
 ```python
-text = TextPreprocessor().norm_punct(text, islf_eos=True, istab_eos=True,
-                                     ignore_case=False)
+text = tp.norm_punct(text, islf_eos=True, istab_eos=True, ignore_case=False)
 ```
 
 The `norm_punct` method is non-static, too. All its params were explained
