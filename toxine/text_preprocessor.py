@@ -933,8 +933,8 @@ class TextPreprocessor:
         :param ignore_case: do not consider character case during processing
 
         :param silent: suppress log
-        :param sent_no: init value for the progress indicator
-                        (if silent != False)
+        :param sent_no: init value for the progress indicator (has effect if
+                        silent is False)
         :param tags: storage for found tags
         :type tags: dict(tag, value)
         """
