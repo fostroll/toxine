@@ -22,7 +22,7 @@ TAG_YEARBIRTH = 'EntityYearOfBirth'
 TAG_YEAR = 'EntityYear'
 
 def tag_birth_year(text, delim):
-    def process (match):
+    def process(match):
         y, isbirth = int(match.group(1)), match.group(2)
         return ' {}{}{} '.format(y, delim, TAG_YEARBIRTH if isbirth else
                                            TAG_YEAR) \
