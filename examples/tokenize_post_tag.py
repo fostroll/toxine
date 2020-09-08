@@ -21,7 +21,7 @@ SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
 TAG_YEARBIRTH = 'EntityYearOfBirth'
 TAG_YEAR = 'EntityYear'
 
-def tag_birth_year (text, delim):
+def tag_birth_year(text, delim):
     def process (match):
         y, isbirth = int(match.group(1)), match.group(2)
         return ' {}{}{} '.format(y, delim, TAG_YEARBIRTH if isbirth else
