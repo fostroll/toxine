@@ -14,6 +14,7 @@ Highlights are:
 * Normalizing punctuation
 * Tokenization (via *NLTK*)
 * Russan *Wikipedia* tokenizer
+* [*brat*](https://brat.nlplab.org/) annotations support
 
 ## Installation
 
@@ -54,6 +55,8 @@ start *Python* interpreter and execute:
 [Text Preprocessor](https://github.com/fostroll/toxine/blob/master/doc/README_TEXT_PREPROCESSOR.md)
 
 [Wrapper for tokenized *Wikipedia*](https://github.com/fostroll/toxine/blob/master/doc/README_WIKIPEDIA.md)
+
+[*brat* annotations support](https://github.com/fostroll/toxine/blob/master/doc/README_BRAT.md)
 
 ## Examples
 
