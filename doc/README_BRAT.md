@@ -62,7 +62,8 @@ splitted if borders of annotations don't fit with corresponding borders of
 tokens.
 
 ```python
-def postprocess_brat_conllu(corpus, save_to=None)
+from toxine.brat import postprocess_brat_conllu
+postprocess_brat_conllu(corpus, save_to=None)
 ```
 Converts **corpus** in text format into *CoNLL-U* format. Embedded *brat*
 entities will be placed to the MISC field.
@@ -71,7 +72,8 @@ Param **save_to** is a path where the result will be stored. If not specified,
 the function returns the result as a generator of *Parsed CoNLL-U* data.
 
 ```python
-def make_ne_tags(corpus, save_to=None)
+from toxine.brat import make_ne_tags
+make_ne_tags(corpus, save_to=None)
 ```
 Replaces *brat* entities in the **corpus** in *CoNLL-U* or *Parsed CoNLL-U*
 format to MISC:NE entities supported by ***Mordl***. Note, that if several brat
