@@ -714,20 +714,19 @@ class TextPreprocessor:
                 else: # maybehyphen in [1, 2]
                     isknown = wform_isknown(word)
                     ## если и предыдущее, и текущее слово известны
-                    #print('[', end='')
-                    if maybehyphen == 1 or isknown:
-                        # если автор не добавлял пробелов, то и мы не будем
-                        #print(hyphens[i-1], end='')
-                        if hyphens[i-1] == '-': # safe... I think %)
-                            res += '-' + word
-                            #maybehyphen = 1
-                        else:
-                            res += ' - ' + word
-                            maybehyphen = 2
+                    if maybehyphen == 1 and isknown:
+                        ## если автор не добавлял пробелов, то и мы не будем
+                        #if hyphens[i-1] == '-': # safe... I think %)
+                        #    res += '-' + word
+                        #    #maybehyphen = 1
+                        #else:
+                        #    res += ' - ' + word
+                        #    maybehyphen = 2
+                        res += ' - ' + word
+                        maybehyphen = 1
                     ## если хотя бы одно слово неизвестно, то дефис
                     else:
                         res += '-' + word
-                    #print(']:', end='')
 
             while True:
                 has1more = i > 0
@@ -771,7 +770,7 @@ class TextPreprocessor:
             return res + ' '
 
         # находим все слова c дефисами; с одной стороны от дефиса м.б. пробел
-        re_sub(r'\w+(?:(?:-| -|- )\w+)+', process, text)
+        text = re_sub(r'\w+(?:(?:-| -|- )\w+)+', process, text)
 
         return text
 
