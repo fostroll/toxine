@@ -773,7 +773,7 @@ class TextPreprocessor:
         text = re_sub(r'\w+(?:(?:-| -|- )\w+)+', process, text)
 
         # дефис в начале русского слова == тире
-        text = re_sub(r'(?:[$|^ЁА-Яёа-я])-[ЁА-Яёа-я]', process, text)
+        text = re_sub(r'(?:$|[^ЁА-Яёа-я])-[ЁА-Яёа-я]', process, text)
 
         return text
 
