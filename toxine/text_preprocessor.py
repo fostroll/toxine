@@ -257,6 +257,16 @@ class TextPreprocessor:
           + r'{,138})\b(?!\S*' + re_char_delim + ')'
         )
         self.TAG_NAMETAG = self.register_tag('EntityNametag', mask='ссылка')
+        self.RE_QUOTATION = re_compile(r'''
+            "
+            ([A-ZЁА-Я])
+            ([^"][.!?][^"])
+            ([^"])
+            "
+        ''')
+        self.TAG_QUOTATION_START = self.register_tag('QuotationStart')
+        self.TAG_QUOTATION_END = self.register_tag('QuotationEnd')
+
         self.RE_TAG = re_compile(
             r'([^' + re_char_delim + r'\s]+)' + re_char_delim
           + r'([^' + re_char_delim + r'\s]+)')
@@ -561,6 +571,13 @@ class TextPreprocessor:
         )
         return text
 
+    def _tag_quotation(self, text):
+        text = self.RE_QUOTATION.sub(
+            '"' + self.TAG_QUOTATION_START + ' ' + r'\g<1>\g<2>\g<3>' + ' '
+            '"' + self.TAG_QUOTATION_END + ' ', text
+        )
+        return text
+
     def norm_punct(self, text, islf_eos=True, istab_eos=True,
                    ignore_case=False):
         """Some heuristics to normalize Russian punctuation. Use it for chat
@@ -626,7 +643,7 @@ class TextPreprocessor:
                           r' \g<1> \g<2> \g<3> ', text, flags=flags)
             # инициалы в конце:
             text = re_sub(r'\b({}) ({})({})?\b'
-                              .format(re_init, re_init, re_lname),
+                              .format(re_lname, re_init, re_init),
                           r' \g<1> \g<2> \g<3> ', text, flags=flags)
 
         # period just before a word
@@ -1072,13 +1089,14 @@ class TextPreprocessor:
                    default_tagger(text) if tagger else \
                    text
 
+        tag_quotation = True
         for tagger, default_tagger in zip(
             [pre_tag, tag_emoji, tag_xml, tag_email,
              tag_uri, tag_phone, tag_date, tag_hashtag,
-             tag_nametag, post_tag],
+             tag_nametag, tag_quotation, post_tag],
             [lambda x: x, self._tag_emoji, self._tag_xml, self._tag_email,
              self._tag_uri, self._tag_phone, self._tag_date, self._tag_hashtag,
-             self._tag_nametag, lambda x: x]
+             self._tag_nametag, self._tag_quotation, lambda x: x]
          ):
             text = run_tagger(tagger, default_tagger)
 
