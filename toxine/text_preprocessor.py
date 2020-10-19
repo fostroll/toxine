@@ -260,8 +260,8 @@ class TextPreprocessor:
         self.RE_QUOTATION = re_compile(r'''
             "
             ([A-ZЁА-Я])
-            ([^"]+[.!?][^"]+)
-            ([^"])
+            ([^"][^"]+)
+            ([.!?])
             "
         ''')
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart')
