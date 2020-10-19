@@ -772,6 +772,9 @@ class TextPreprocessor:
         # находим все слова c дефисами; с одной стороны от дефиса м.б. пробел
         text = re_sub(r'\w+(?:(?:-| -|- )\w+)+', process, text)
 
+        # дефис в начале русского слова == тире
+        text = re_sub(r'(?:[$|^ЁА-Яёа-я])-[ЁА-Яёа-я]', process, text)
+
         return text
 
     @staticmethod
