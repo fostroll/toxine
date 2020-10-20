@@ -257,15 +257,15 @@ class TextPreprocessor:
           + r'{,138})\b(?!\S*' + re_char_delim + ')'
         )
         self.TAG_NAMETAG = self.register_tag('EntityNametag', mask='ссылка')
-        self.RE_QUOTATION = re_compile(r'''
-            "
-            ([A-ZЁА-Я])
-            ([^"]+)
-            ([.!?])
-            "
-        ''')
-        self.TAG_QUOTATION_START = self.register_tag('QuotationStart')
-        self.TAG_QUOTATION_END = self.register_tag('QuotationEnd')
+        re_1 = r'[A-ZЁА-Я][^"]+[.!?]\s*(?:[A-ZЁА-Я][^"]*)'
+        self.RE_QUOTATION = re_compile(r'''(?ximu)
+            (?:(")({})("))|    # 1 - 3
+            (?:(``)({})(''))|  # 4 - 6
+            (?:(«)({})(»))|    # 7 - 9
+            (?:(„)({})(“))     # 10 - 12
+        '''.format(re_1, re_1, re_1, re_1))
+        self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
+        self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
         self.RE_TAG = re_compile(
             r'([^' + re_char_delim + r'\s]+)' + re_char_delim
