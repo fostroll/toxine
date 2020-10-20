@@ -818,7 +818,7 @@ class TextPreprocessor:
 
         re_quot = re_compile(r'\d+' + self.TAG_QUOTATION_END)
         for i in range(1, len(sents)):
-            match = re_quot.match(sents[1])
+            match = re_quot.match(sents[i])
             if match:
                 quot = match.group(0)
                 sents[i - 1] += ' ' + quot
