@@ -816,14 +816,13 @@ class TextPreprocessor:
             sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
                                 sents))
 
-        quots = [x + self.TAG_QUOTATION_END for x in ['"', "''", '»', '“']]
-        len_quots = [len(x) for x in quots]
+        re_quot = re_compile(r'\d+' + self.TAG_QUOTATION_END)
         for i in range(1, len(sents)):
-            for quot, len_quot in zip(quots, len_quots):
-                if sents[i].startswith(quot):
-                    sents[i - 1] += ' ' + quot
-                    sents[i] = sents[i][len_quot:]
-                    break
+            match = re_quot.match(sents[1])
+            if match:
+                quot = match.group(0)
+                sents[i - 1] += ' ' + quot
+                sents[i] = sents[i][len(quot):]
         return sents
 
     @staticmethod
