@@ -360,7 +360,8 @@ class TextPreprocessor:
         print('Load corpus...', end=' ', file=LOG_FILE)
         LOG_FILE.flush()
         with open(path, mode='rt', encoding=encoding) as f:
-            res = self.new_pars(list(self.text_to_pars(f.read(), eop=eop)), doc_id)
+            res = self.new_pars(list(self.text_to_pars(f.read(), eop=eop)),
+                                doc_id)
         print('done.', file=LOG_FILE)
         return res
 
@@ -419,22 +420,22 @@ class TextPreprocessor:
         text = self.RE_EMOJI.sub(
             lambda x:
                 (x.group(1) + ' ' + x.group(2) + self.TAG_EMOJI + ' '
-                                                                   + x.group(3)
+                                                                  + x.group(3)
                      if x.group(2) else '')
               + (x.group(4) + x.group(5) + self.TAG_EMOJI + ' ' + x.group(6)
                      if x.group(5) else '')
               + (x.group(7) + ' ' + x.group(8) + self.TAG_EMOJI + ' '
-                                                                   + x.group(9)
+                                                                  + x.group(9)
                      if x.group(8) else '')
               + (' ' + x.group(10) + self.TAG_EMOJI + ' '
                      if x.group(10) else '')
               + (x.group(11) + ' ' + x.group(12) + self.TAG_EMOJI + ' '
                      if x.group(12) else '')
-              + (x.group(13) + x.group(14) + ' ' + x.group(15) + self.TAG_EMOJI
-                                                                          + ' '
+              + (x.group(13) + x.group(14) + ' ' + x.group(15)
+                                                        + self.TAG_EMOJI + ' '
                      if x.group(15) else '')
               + (' ' + x.group(16) + self.TAG_EMOJI + ' ' + x.group(17)
-                                                                  + x.group(18)
+                                                                 + x.group(18)
                      if x.group(16) else '')
               + (' yandex_' + x.group(19) + self.TAG_EMOJI
                      if x.group(19) else ''),
@@ -811,66 +812,16 @@ class TextPreprocessor:
         :rtype: list
         """
         sents = nltk_sent_tokenize(text, language='russian')
-        """
-        sents = []
-        prev_sent = None
-        for sent in sents_:
-            sent = sent.strip()
-            with open('111', 'at', encoding='utf-8') as f:
-                print(sent, file=f)
-            if sents:
-                if sent[0].isalpha():
-                    # если первая буква предложения - строчная, то приклеиваем
-                    # предложение к предыдущему
-                    if not sent[0].istitle():
-                        prev_sent += ' ' + sent
-                        sents[-1] = prev_sent
-                        continue
-                    #elif prev_sent[-1] == '"' and prev_sent.count('"') % 2:
-                    # если в конце предыдущего предложения кавычка, но
-                    # начинается оно не с кавычки, то приклеиваем к нему
-                    # следующее
-                    elif prev_sent[-1] == '"' and prev_sent[0] != '"':
-                        sents[-1] = prev_sent[:-1]
-                        sent = '"' + sent
-                    else:
-                        # если в конце предыдущего предложения инициал, а новое
-                        # начинается с инициала, то склеиваем.
-                        # если же в первом слове нового предложения только
-                        # буквы, а в конце предыдущего инициалы, перед которыми
-                        # слово не с большой буквы (либо с большой, но оно
-                        # первое в предложении), то тоже склеиваем.
-                        #
-                        # инициал в конце предыдущей: "X." или "Xx."
-                        if re_search(r'\b' + self._CARE + r'?\b\s*\.$', prev_sent):
-                            # инициал в начале следующей
-                            # либо
-                            # в конце инициалы а перед ними не фамилия,
-                            # а в начале следующей - фамилия
-                            if re_match(r'\b' + self._CARE + r'?\b\s*\.', sent) \
-                            or (re_search(r'''(?x)
-                                (?: ^                 # либо начало строки
-                                  | (?: ^ |'''        # либо начало строки или
-                                      + self._NOCASP  #     не заглавная буква, за которыми идут
-                              + r''') \s* [^\s\w]\s*  #     не буква и не пробел, но потом м.б. пробелы
-                                  | \b                              # либо начало слова - такое, что:
-                                      (?: ^''' + self._CAPS + r'''  #     первая буква м.б. заглавной только в начале строки
-                                        |''' + self._NOCA + r'''    #     иначе первая буква - строчная
-                                      ) \S*? \b \s+                 # дальше м. идти любая непробельная дичь
-                                )                                   #      до конца слова, а потом хотя бы один пробел
-                                (?: \b''' + self._CARE + r'''?\b\s*\.\s* )*  # м.б. инициалы
-                                \b''' + self._CARE + r'''?\b\s*\.$''',       # в конце инициал
-                            prev_sent)
-                            and re_match(r'\b' + self._CARE + r'+\b\s*(?:[^.]|\.$)',
-                                         sent)):
-                                prev_sent += ' ' + sent
-                                sents[-1] = prev_sent
-                                continue
-            prev_sent = sent
-            sents.append(sent)
-        """
+
         if kill_empty:
             sents = filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x), sents)
+
+        quot = "''" + self.TAG_QUOTATION_END
+        len_quot = len(quot)
+        for i in range(1, len(sents)):
+            if sents[i].startswith(quot):
+                sents[i - 1] += ' ' + quot
+                sents[i] = sents[i][len_quot:]
         return sents
 
     @staticmethod
