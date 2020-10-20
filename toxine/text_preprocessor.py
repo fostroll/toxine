@@ -836,20 +836,6 @@ class TextPreprocessor:
                 sents.append(sent)
             return sents
 
-        def parse_ya(sent):
-            sents = []
-            i = 0
-            while True:
-                i = sent.find('я.', i)
-                if i == -1:
-                    break
-                i += 2
-                sents.append(sent[:i])
-                sent = sent[i:]
-            if sent:
-                sents.append(sent)
-            return sents
-
         sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         re_ellipsis = re_compile(r'(...)\s+([A-ZЁЯ-Я])')
@@ -860,10 +846,7 @@ class TextPreprocessor:
                 sents_[-1] += ' ' + quot
                 sent = sent[len(quot):]
 
-            sents0 = parse_el(sent)
-            for s in sents0:
-                #ss0 = parse_ya(s)
-                #for s in ss0:
+            for s in parse_el(sent)
                 sents_.append(s)
 
         if kill_empty:
