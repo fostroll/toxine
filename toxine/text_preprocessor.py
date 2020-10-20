@@ -259,11 +259,11 @@ class TextPreprocessor:
         self.TAG_NAMETAG = self.register_tag('EntityNametag', mask='ссылка')
         re_1 = r'\s*[A-ZЁА-Я][^"]+[.!?](?:\s*[A-ZЁА-Я][^"])*'
         self.RE_QUOTATION = re_compile(r'''(?xmu)
-            (?:(")({})("))|    # 1 - 3
-            (?:(``)({})(''))|  # 4 - 6
-            (?:(«)({})(»))|    # 7 - 9
-            (?:(„)({})(“))     # 10 - 12
-        '''.format(re_1, re_1, re_1, re_1))
+            (?:(")({0})("))|    # 1 - 3
+            (?:(``)({0})(''))|  # 4 - 6
+            (?:(«)({0})(»))|    # 7 - 9
+            (?:(„)({0})(“))     # 10 - 12
+        '''.format(re_1))
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
         self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
@@ -647,16 +647,19 @@ class TextPreprocessor:
             (r'[ЁА-Я](?:[ёа-я]+-[ЁА-Я])?[ёа-я]+', r'[ЁА-Я]\.')
         ]:
             # инициалы в начале:
-            text = re_sub(r'\b({})({})? ?({})\b'
-                              .format(re_init, re_init, re_lname),
+            text = re_sub(r'\b({0})({0})? ?({1})\b'
+                              .format(re_init, re_lname),
                           r' \g<1> \g<2> \g<3> ', text, flags=flags)
             # инициалы в конце:
-            text = re_sub(r'\b({}) ({})({})?\b'
-                              .format(re_lname, re_init, re_init),
+            text = re_sub(r'\b({1}) ({0})({0})?\b'
+                              .format(re_init, re_lname),
                           r' \g<1> \g<2> \g<3> ', text, flags=flags)
 
         # period just before a word
         text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
+
+        # точка после "я"
+        text = re_sub(r'я\.', r'я .', text)
 
         # --- end of sentence w/o space after period ---
         def process(match):
@@ -818,6 +821,35 @@ class TextPreprocessor:
         """
         sents = nltk_sent_tokenize(text, language='russian')
 
+        def parse_el(sent):
+            sents = []
+            ellipsis = self.CHAR_DELIM + self.CHAR_DELIM
+            sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
+            i = 0
+            while True:
+                i = sent.find(ellipsis, i)
+                if i == -1:
+                     break
+                sents.append(sent[:i])
+                sent = sent[i + 2:]
+            if sent:
+                sents.append(sent)
+            return sents
+
+        def parse_ya(sent):
+            sents = []
+            i = 0
+            while True:
+                i = sent.find('я.', i)
+                if i == -1:
+                    break
+                i += 2
+                sents.append(sent[:i])
+                sent = sent[i:]
+            if sent:
+                sents.append(sent)
+            return sents
+
         sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         re_ellipsis = re_compile(r'(...)\s+([A-ZЁЯ-Я])')
@@ -828,40 +860,11 @@ class TextPreprocessor:
                 sents_[-1] += ' ' + quot
                 sent = sent[len(quot):]
 
-            def parse_el(sent):
-                sents = []
-                ellipsis = self.CHAR_DELIM + self.CHAR_DELIM
-                sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
-                i = 0
-                while True:
-                    i = sent.find(ellipsis, i)
-                    if i == -1:
-                         break
-                    sents.append(sent[:i])
-                    sent = sent[i + 2:]
-                if sent:
-                    sents.append(sent)
-                return sents
-
-            def parse_ya(sent):
-                sents = []
-                i = 0
-                while True:
-                    i = sent.find('я.', i)
-                    if i == -1:
-                        break
-                    i += 2
-                    sents.append(sent[:i])
-                    sent = sent[i:]
-                if sent:
-                    sents.append(sent)
-                return sents
-
             sents0 = parse_el(sent)
             for s in sents0:
-                ss0 = parse_ya(s)
-                for s in ss0:
-                    sents_.append(s)
+                #ss0 = parse_ya(s)
+                #for s in ss0:
+                sents_.append(s)
 
         if kill_empty:
             sents_ = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
