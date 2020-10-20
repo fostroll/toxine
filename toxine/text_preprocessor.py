@@ -813,7 +813,8 @@ class TextPreprocessor:
         sents = nltk_sent_tokenize(text, language='russian')
 
         if kill_empty:
-            sents = filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x), sents)
+            sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
+                                sents))
 
         quot = "''" + self.TAG_QUOTATION_END
         len_quot = len(quot)
