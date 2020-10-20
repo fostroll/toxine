@@ -822,6 +822,21 @@ class TextPreprocessor:
             sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
                                 sents))
 
+        sents_ = []
+        re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
+        for sent in sents:
+            match = re_quot.match(sent)
+            if sents_ and match:
+                quot = match.group(0)
+                sents_[1] += ' ' + quot
+                sent = sent[len(quot):]
+            i = 0
+            while sent.find('я.', i):
+                i = sent.index('я.') + 2
+                sents_.append(sent[:i])
+                sent = sent[i:]
+            sents_.append(sent)
+
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         for i in range(1, len(sents)):
             match = re_quot.match(sents[i])
