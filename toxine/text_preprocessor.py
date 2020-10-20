@@ -545,7 +545,7 @@ class TextPreprocessor:
 
     def _tag_date(self, text):
         def process(match):
-            res = token = match.group(0)
+            res = match.group(0)
             d, m, y = int(match.group(1)), int(match.group(2)), match.group(3)
             if len(y) == 2: y = '20' + y
             y = int(y)
@@ -574,7 +574,7 @@ class TextPreprocessor:
 
     def _tag_quotation(self, text):
         def process(match):
-            res = token = match.group(0)
+            res = match.group(0)
             for i in range(1, 12, 3):
                 q1 = match.group(i)
                 if q1:
