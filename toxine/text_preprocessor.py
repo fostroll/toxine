@@ -705,6 +705,9 @@ class TextPreprocessor:
 
             res = ''
             words = token.replace(' ', '').split('-')
+            if len(words) == 2 and words[0].isdecimal() \
+                               and words[1].isalpha():
+                return '{}-{}'.format(words[0], words[1])
             # поиск:                   -i-
             #                 [xxx....] 0
             #                 [.xxx...] 1
@@ -764,29 +767,29 @@ class TextPreprocessor:
             while True:
                 has1more = i > 0
                 if i >= 2:
-                    for word in [words[i-2] + '-' + words[i-1],
-                                 words[i-2] + ''  + words[i-1]]:
+                    for word in [words[i - 2] + '-' + words[i - 1],
+                                 words[i - 2] + ''  + words[i - 1]]:
                         if wform_isknown(word):
                             res += ' ' + word
                             has1more = False
                             maybehyphen = 0
                             break
                     else:
-                        add_word(i-2)
+                        add_word(i - 2)
                 if i >= len_words:
                     if has1more:
-                        add_word(i-1)
+                        add_word(i - 1)
                     break
                 if i <= last_3:
                     for word in [
-                        words[i] + '-' + words[i+1] + '-' + words[i+2],
-                        words[i] + ''  + words[i+1] + '-' + words[i+2],
-                        words[i] + '-' + words[i+1] +  '' + words[i+2],
-                        words[i] +  '' + words[i+1] +  '' + words[i+2]
+                        words[i] + '-' + words[i + 1] + '-' + words[i + 2],
+                        words[i] + ''  + words[i + 1] + '-' + words[i + 2],
+                        words[i] + '-' + words[i + 1] +  '' + words[i + 2],
+                        words[i] +  '' + words[i + 1] +  '' + words[i + 2]
                     ]:
                         if wform_isknown(word):
                             if has1more:
-                                add_word(i-1)
+                                add_word(i - 1)
                             res += ' ' + word
                             words = words[i + 3:]
                             len_words = len(words)
