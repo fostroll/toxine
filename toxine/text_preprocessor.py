@@ -705,8 +705,12 @@ class TextPreprocessor:
 
             res = ''
             words = token.replace(' ', '').split('-')
-            if len(words) == 2 and words[0].isdecimal() \
-                               and words[1].isalpha():
+            test_word = '{}-{}'.format(words[0], words[1])
+            if len(words) == 2 and (
+                wform_isknown(test_word) or (
+                    words[0].isdecimal() and words[1].isalpha()
+                )
+            ):
                 return '{}-{}'.format(words[0], words[1])
             # поиск:                   -i-
             #                 [xxx....] 0
