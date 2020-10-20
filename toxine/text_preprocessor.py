@@ -840,6 +840,7 @@ class TextPreprocessor:
                 sent = sent[i:]
             sents_.append(sent)
 
+        '''
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         for i in range(1, len(sents)):
             match = re_quot.match(sents[i])
@@ -847,7 +848,8 @@ class TextPreprocessor:
                 quot = match.group(0)
                 sents[i - 1] += ' ' + quot
                 sents[i] = sents[i][len(quot):]
-        return sents
+        '''
+        return sents_
 
     @staticmethod
     def word_tokenize(text):
