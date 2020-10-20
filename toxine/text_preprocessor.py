@@ -578,7 +578,8 @@ class TextPreprocessor:
                 q1 = match.group(i)
                 if q1:
                     q2, q3 = match.group(i + 1), match.group(i + 2)
-                    res = q1 + self.TAG_QUOTATION_START + ' ' + q2 + ' '
+                    res = q1 + self.TAG_QUOTATION_START + ' ' \
+                        + q2 + ' ' \
                         + q3 + self.TAG_QUOTATION_END + ' '
                     break
             return res
