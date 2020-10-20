@@ -825,7 +825,7 @@ class TextPreprocessor:
             match = re_quot.match(sent)
             if sents_ and match:
                 quot = match.group(0)
-                sents_[1] += ' ' + quot
+                sents_[-1] += ' ' + quot
                 sent = sent[len(quot):]
 
             def parse_el(sent):
