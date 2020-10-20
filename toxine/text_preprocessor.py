@@ -846,7 +846,7 @@ class TextPreprocessor:
                 sents_[-1] += ' ' + quot
                 sent = sent[len(quot):]
 
-            for s in parse_el(sent)
+            for s in parse_el(sent):
                 sents_.append(s)
 
         if kill_empty:
