@@ -867,7 +867,7 @@ class TextPreprocessor:
             sents_ = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
                                  sents_))
 
-        return sents
+        return sents_
 
     @staticmethod
     def word_tokenize(text):
