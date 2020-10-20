@@ -831,8 +831,11 @@ class TextPreprocessor:
                 sents_[1] += ' ' + quot
                 sent = sent[len(quot):]
             i = 0
-            while sent.find('я.', i):
-                i = sent.index('я.') + 2
+            while True:
+                i = sent.find('я.', i)
+                if i == -1:
+                    break
+                i += 2
                 sents_.append(sent[:i])
                 sent = sent[i:]
             sents_.append(sent)
