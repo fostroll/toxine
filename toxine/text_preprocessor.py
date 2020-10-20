@@ -816,7 +816,7 @@ class TextPreprocessor:
             sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
                                 sents))
 
-        re_quot = re_compile(r'\d+' + self.TAG_QUOTATION_END)
+        re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         for i in range(1, len(sents)):
             match = re_quot.match(sents[i])
             if match:
