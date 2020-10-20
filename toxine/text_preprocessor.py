@@ -659,7 +659,7 @@ class TextPreprocessor:
         text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
 
         # точка после "я"
-        text = re_sub(r'я\.', r'я .', text)
+        text = re_sub(r'\b([ёа-я]+)\.', r'\g<1> .', text)
 
         # --- end of sentence w/o space after period ---
         def process(match):
