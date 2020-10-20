@@ -572,10 +572,17 @@ class TextPreprocessor:
         return text
 
     def _tag_quotation(self, text):
-        text = self.RE_QUOTATION.sub(
-            '"' + self.TAG_QUOTATION_START + ' ' + r'\g<1>\g<2>\g<3>' + ' '
-            '"' + self.TAG_QUOTATION_END + ' ', text
-        )
+        def process(match):
+            res = token = match.group(0)
+            for i in range(1, 12, 3):
+                q1 = match.group(i)
+                if q1:
+                    q2, q3 = match.group(i + 1), match.group(i + 2)
+                    res = q1 + self.TAG_QUOTATION_START + ' ' + q2 + ' '
+                        + q3 + self.TAG_QUOTATION_END + ' '
+                    break
+            return res
+        text = self.RE_QUOTATION.sub(process, text)
         return text
 
     def norm_punct(self, text, islf_eos=True, istab_eos=True,
