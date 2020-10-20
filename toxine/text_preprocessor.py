@@ -822,34 +822,55 @@ class TextPreprocessor:
             sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
                                 sents))
 
-        sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
+        re_ellipsis = re_compile(r'(...)\s+([A-ZЁЯ-Я])')
         for sent in sents:
             match = re_quot.match(sent)
             if sents_ and match:
                 quot = match.group(0)
                 sents_[1] += ' ' + quot
                 sent = sent[len(quot):]
-            i = 0
-            while True:
-                i = sent.find('я.', i)
-                if i == -1:
-                    break
-                i += 2
-                sents_.append(sent[:i])
-                sent = sent[i:]
-            sents_.append(sent)
 
-        '''
-        re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
-        for i in range(1, len(sents)):
-            match = re_quot.match(sents[i])
-            if match:
-                quot = match.group(0)
-                sents[i - 1] += ' ' + quot
-                sents[i] = sents[i][len(quot):]
-        '''
-        return sents_
+            def parse_el(sent):
+                sents = []
+                ellipsis = self.CHAR_DELIM + self.CHAR_DELIM
+                sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
+                i = 0
+                while True:
+                    i = sent.find(ellipsis, i)
+                    if i == -1:
+                         break
+                    sents.append(sent[:i])
+                    sent = sent[i + 2:]
+                if sent:
+                    sents.append(sent)
+                return sents
+
+            def parse_ya(sent):
+                sents = []
+                i = 0
+                while True:
+                    i = sent.find('я.', i)
+                    if i == -1:
+                        break
+                    i += 2
+                    sents.append(sent[:i])
+                    sent = sent[i:]
+                if sent:
+                    sents.append(sent)
+                return sents
+
+            sents0 = parse_el(sent)
+            for s in sents0:
+                ss0 = parse_ya(s)
+                for s in ss0:
+                    sents_.append(s)
+
+        if kill_empty:
+            sents_ = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
+                                 sents_))
+
+        return sents
 
     @staticmethod
     def word_tokenize(text):
