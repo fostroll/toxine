@@ -818,10 +818,7 @@ class TextPreprocessor:
         """
         sents = nltk_sent_tokenize(text, language='russian')
 
-        if kill_empty:
-            sents = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
-                                sents))
-
+        sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         re_ellipsis = re_compile(r'(...)\s+([A-ZЁЯ-Я])')
         for sent in sents:
