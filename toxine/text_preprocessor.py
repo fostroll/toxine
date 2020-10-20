@@ -821,6 +821,7 @@ class TextPreprocessor:
         """
         sents = nltk_sent_tokenize(text, language='russian')
 
+        re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁЯ-Я])')
         def parse_el(sent):
             sents = []
             ellipsis = self.CHAR_DELIM + self.CHAR_DELIM
@@ -838,7 +839,6 @@ class TextPreprocessor:
 
         sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
-        re_ellipsis = re_compile(r'(...)\s+([A-ZЁЯ-Я])')
         for sent in sents:
             match = re_quot.match(sent)
             if sents_ and match:
