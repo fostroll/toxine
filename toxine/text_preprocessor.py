@@ -692,7 +692,11 @@ class TextPreprocessor:
 
         # --- searching dashes between hyphens ---
         def process(match):
-            token = match.group(0)
+            # если один из токенов - наш тэг, то ничего не меняем
+            if self.CHAR_DELIM in [match.group(1), match.group(3)]:
+                return match.group(0)
+
+            token = match.group(2)
             # сохраняем разделители
             hyphens = re_findall('\W+', token)
 
@@ -796,7 +800,9 @@ class TextPreprocessor:
             return res + ' '
 
         # находим все слова c дефисами; с одной стороны от дефиса м.б. пробел
-        text = re_sub(r'\w+(?:(?:-| -|- )\w+)+', process, text)
+        text = re_sub(r'(\{})?(\w+(?:(?:-| -|- )\w+)(\{})?)+'
+                           .format(self.CHAR_DELIM, self.CHAR_DELIM),
+                      process, text)
 
         # дефис в начале русского слова = тире
         text = re_sub(r'(^|[^ЁА-Яёа-я])-([ЁА-Яёа-я])', '\g<1>- \g<2>', text)
