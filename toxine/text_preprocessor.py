@@ -805,8 +805,7 @@ class TextPreprocessor:
 
         return text
 
-    @staticmethod
-    def sent_tokenize(text, kill_empty=True):
+    def sent_tokenize(self, text, kill_empty=True):
         """Return sentence-tokenized copy of a *text*
 
         :rtype: list
