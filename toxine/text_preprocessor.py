@@ -267,7 +267,7 @@ class TextPreprocessor:
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
         self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
-        self.TAG_SHORTCUT = self.register_tag('Shortcut')
+        #self.TAG_SHORTCUT = self.register_tag('Shortcut')
 
         self.RE_TAG = re_compile(
             r'([^' + re_char_delim + r'\s]+)' + re_char_delim
@@ -681,11 +681,11 @@ class TextPreprocessor:
                                     # пробелы и/или точка
         re_4 = r'\s*'
         re_5 = r'\s+'
-        for a, b in [('{0}[иИ]{4}т{2}д{1}', 'и так далее'),
-                     ('{0}[иИ]{4}т{2}п{1}', 'и тому подобное'),
-                     ('{0}[мМ]{3}б{1}',     'может быть'),
-                     ('{0}[тТ]{3}е{1}',     'то есть'),
-                     ('{0}[тТ]{2}к{1}',     'так как')]:
+        for a, b in [(r'{0}[иИ]{4}т{2}д{1}', r'и так далее'),
+                     (r'{0}[иИ]{4}т{2}п{1}', r'и тому подобное'),
+                     (r'{0}[мМ]{3}б{1}',     r'может быть'),
+                     (r'{0}[тТ]{3}е{1}',     r'то есть'),
+                     (r'{0}[тТ]{2}к{1}',     r'так как')]:
             text = re_sub(a.format(re_0, re_1, re_2, re_3, re_4, re_5),
                           # если после сокращения идёт слово
                           # с заглавной буквы, то ставим перед ним точку
@@ -693,6 +693,9 @@ class TextPreprocessor:
                                         .format(b, ('. ' + x.group(1))
                                                        if x.group(1) else ''),
                           text)
+        for a, b in [(r'{0}г-ж([аеиу]|ой){0}', r'госпож\g<1>'),
+                     (r'{0}г-н([аеу]|ом)?{0}', r'господин\g<1>')]:
+            text = re_sub(a.format(re_0), ' {} '.format(b, text))
 
         # === HYPHENS ===
         # ---------------
