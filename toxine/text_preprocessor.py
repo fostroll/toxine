@@ -695,7 +695,7 @@ class TextPreprocessor:
                           text)
         for a, b in [(r'{0}г-ж([аеиу]|ой){0}', r'госпож\g<1>'),
                      (r'{0}г-н([аеу]|ом)?{0}', r'господин\g<1>')]:
-            text = re_sub(a.format(re_0), ' {} '.format(b, text))
+            text = re_sub(a.format(re_0), ' {} '.format(b), text)
 
         # === HYPHENS ===
         # ---------------
