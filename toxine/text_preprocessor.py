@@ -674,7 +674,8 @@ class TextPreprocessor:
         # --- known shortcuts ---
         re_0 = r'\b'
         re_1 = r'\b\.?\s*([ЁА-Я])?' # конец слова; дальше м.б. точка и/или
-                                    # заглавная буква через пробелы или без них
+                                    # заглавная буква через пробелы или без
+                                    # них
         re_2 = r'\s*\.?\s*'
         re_3 = r'\b\s*\.?\s*'       # конец слова, после которого возможны
                                     # пробелы и/или точка
@@ -688,12 +689,9 @@ class TextPreprocessor:
             text = re_sub(a.format(re_0, re_1, re_2, re_3, re_4, re_5),
                           # если после сокращения идёт слово
                           # с заглавной буквы, то ставим перед ним точку
-                          lambda x: ' {}[{}]{} {}' \
-                                        .format(a, b, self.TAG_SHORTCUT,
-                                                ('. ' + x.group(1))
-                                                    if x.group(1) else ''),
-                          #lambda x: ' {} {}'.format(b, ('. ' + x.group(1))
-                          #                              if x.group(1) else ''),
+                          lambda x: ' {} {}'
+                                        .format(b, ('. ' + x.group(1))
+                                                       if x.group(1) else ''),
                           text)
 
         # === HYPHENS ===
