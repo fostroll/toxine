@@ -267,6 +267,8 @@ class TextPreprocessor:
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
         self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
+        self.TAG_SHORTCUT = self.register_tag('Shortcut')
+
         self.RE_TAG = re_compile(
             r'([^' + re_char_delim + r'\s]+)' + re_char_delim
           + r'([^' + re_char_delim + r'\s]+)')
@@ -684,10 +686,14 @@ class TextPreprocessor:
                      ('{0}[тТ]{3}е{1}',     'то есть'),
                      ('{0}[тТ]{2}к{1}',     'так как')]:
             text = re_sub(a.format(re_0, re_1, re_2, re_3, re_4, re_5),
-                          # если после сокращения идёт слово с заглавной буквы,
-                          # то ставим перед ним точку
-                          lambda x: ' {} {}'.format(b, '. ' + x.group(1)
-                                                        if x.group(1) else ''),
+                          # если после сокращения идёт слово
+                          # с заглавной буквы, то ставим перед ним точку
+                          lambda x: ' {}[{}]{} {}' \
+                                        .format(a, b, self.TAG_SHORTCUT,
+                                                ('. ' + x.group(1))
+                                                    if x.group(1) else ''),
+                          #lambda x: ' {} {}'.format(b, ('. ' + x.group(1))
+                          #                              if x.group(1) else ''),
                           text)
 
         # === HYPHENS ===
