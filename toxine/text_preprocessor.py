@@ -1183,13 +1183,13 @@ class TextPreprocessor:
                     if delim_pos2 >= 0:
                         typ = tag[1:delim_pos2]
                         if typ == '':
-                            tag = tag[delim_pos2:]
+                            tag = tag[delim_pos2 + 1:]
                             if tag == self.TAG_SHORTCUT:
                                 subst, orig = SHORTCUTS[idx]
                                 token['FORM'] = subst
                                 misc[self.TAG_SHORTCUT] = orig
                             else:
-                                raise ValueError('Unknow entity type "{}"'
+                                raise ValueError('Unknow entity "{}"'
                                                      .format(tag))
 
                         else:
