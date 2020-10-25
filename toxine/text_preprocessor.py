@@ -1180,7 +1180,7 @@ class TextPreprocessor:
                     idx = int(wform[:delim_pos])
                     tag = wform[delim_pos:]
                     if tag == self.TAG_SHORTCUT:
-                        subst, orig = SHORTCUTS[idx]
+                        subst, orig = self.SHORTCUTS[idx]
                         token['FORM'] = subst
                         misc[self.TAG_SHORTCUT] = orig
                     else:
