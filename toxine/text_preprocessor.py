@@ -283,7 +283,7 @@ class TextPreprocessor:
                        .format('' if orig else ' ', idx, self.TAG_SHORTCUT)
             self.SHORTCUTS.append((subst_, orig))
             orig = ''
-        return idx
+        return res
 
     def clear_corpus(self):
         self._corpus = OrderedDict()
