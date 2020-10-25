@@ -267,12 +267,23 @@ class TextPreprocessor:
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
         self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
-        #self.TAG_SHORTCUT = self.register_tag('Shortcut')
-
         self.RE_TAG = re_compile(
             r'([^' + re_char_delim + r'\s]+)' + re_char_delim
           + r'([^' + re_char_delim + r'\s]+)')
         self.TAG_UNK = self.register_tag('EntityUnk')
+
+        self.SHORTCUTS = []
+        self.TAG_SHORTCUT = self.CHAR_DELIM + self.CHAR_DELIM + 'Shortcut'
+
+    def add_shortcut(self, orig, subst):
+        res = ''
+        for subst_ in subst.split():
+            idx = len(self.SHORTCUTS)
+            res += '{}{}{}' \
+                       .format('' if orig else ' ', idx, self.TAG_SHORTCUT)
+            self.SHORTCUTS.append((subst_, orig))
+            orig = ''
+        return idx
 
     def clear_corpus(self):
         self._corpus = OrderedDict()
@@ -672,6 +683,7 @@ class TextPreprocessor:
         text = re_sub(r'(\w+)\.(\w+)', process, text)  # sic!
 
         # --- known shortcuts ---
+        '''
         re_0 = r'\b'
         re_1 = r'\b\.?\s*([ЁА-Я])?' # конец слова; дальше м.б. точка и/или
                                     # заглавная буква через пробелы или без
@@ -681,6 +693,7 @@ class TextPreprocessor:
                                     # пробелы и/или точка
         re_4 = r'\s*'
         re_5 = r'\s+'
+        #TODO: capitalization
         for a, b in [(r'{0}[иИ]{4}т{2}д{1}', r'и так далее'),
                      (r'{0}[иИ]{4}т{2}п{1}', r'и тому подобное'),
                      (r'{0}[мМ]{3}б{1}',     r'может быть'),
@@ -696,6 +709,39 @@ class TextPreprocessor:
         for a, b in [(r'{0}г-ж([аеиу]|ой){0}', r'госпож\g<1>'),
                      (r'{0}г-н([аеу]|ом)?{0}', r'господин\g<1>')]:
             text = re_sub(a.format(re_0), ' {} '.format(b), text)
+        '''
+        re_0 = r'\b'
+        re_1 = r'\s*([ЁА-Я])?'  # заглавная буква через пробелы или без них
+        re_2 = r'\b\s*\.?'      # конец слова, после которого возможны пробелы
+                                # и/или точка
+        re_3 = re_2 + r'\s*'    # то же, что и re_2, но в конце ещё может быть
+                                # пробел
+        re_4 = r'\s*'
+        re_5 = r'\s+'
+        #TODO: capitalization
+        for a, b in [(r'({0}[иИ]{4}т{2}д{2}{1}',  r'и так далее'),
+                     (r'({0}[иИ]{4}т{2}п{2}){1}', r'и тому подобное'),
+                     (r'({0}[мМ]{3}б{2}){1}',     r'может быть'),
+                     (r'({0}[тТ]{3}е{2}){1}',     r'то есть'),
+                     (r'({0}[тТ]{3}к{2}){1}',     r'так как')]:
+            text = re_sub(a.format(re_0, re_1, re_2, re_3, re_4, re_5),
+                          # если после сокращения идёт слово
+                          # с заглавной буквы, то ставим перед ним точку
+                          lambda x: ' {} {}'
+                                        .format(self.add_shortcut(x.group(1),
+                                                                  b),
+                                                ('. ' + x.group(2))
+                                                    if x.group(2) else ''),
+                          text)
+        for a, b in [(r'({0}г-ж([аеиу]|ой){0})', r'госпож'),
+                     (r'({0}г-н([аеу]|ом)?{0})', r'господин')]:
+            text = re_sub(a.format(re_0),
+                          lambda x: ' {}{} '
+                                        .format(self.add_shortcut(x.group(1),
+                                                                  b),
+                                                x.group(2)
+                                                    if x.group(2) else ''),
+                          text)
 
         # === HYPHENS ===
         # ---------------
