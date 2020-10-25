@@ -886,7 +886,7 @@ class TextPreprocessor:
         re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁЯ-Я])')
         def parse_el(sent):
             sents = []
-            ellipsis = self.CHAR_DELIM + self.CHAR_DELIM
+            ellipsis = self.CHAR_DELIM + 'elliplis' + self.CHAR_DELIM
             sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
             i = 0
             while True:
@@ -1179,7 +1179,7 @@ class TextPreprocessor:
                 if delim_pos >= 0:
                     idx = int(wform[:delim_pos])
                     tag = wform[delim_pos:]
-                    delim_pos2 = tag.find(self.CHAR_DELIM, delim_pos + 1)
+                    delim_pos2 = tag.find(self.CHAR_DELIM, 1)
                     if delim_pos2 >= 0:
                         typ = tag[1:delim_pos2]
                         if typ == '':
