@@ -736,11 +736,12 @@ class TextPreprocessor:
         for a, b in [(r'({0}г-ж([аеиу]|ой){0})', r'госпож'),
                      (r'({0}г-н([аеу]|ом)?{0})', r'господин')]:
             text = re_sub(a.format(re_0),
-                          lambda x: ' {}{} '
-                                        .format(self.add_shortcut(x.group(1),
-                                                                  b),
-                                                x.group(2)
-                                                    if x.group(2) else ''),
+                          lambda x: ' {} '.format(
+                              self.add_shortcut(x.group(1),
+                                                b + (x.group(2)
+                                                         if x.group(2) else
+                                                     ''))
+                          ),
                           text)
 
         # === HYPHENS ===
