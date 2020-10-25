@@ -886,7 +886,8 @@ class TextPreprocessor:
         re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁЯ-Я])')
         def parse_el(sent):
             sents = []
-            ellipsis = self.CHAR_DELIM + 'elliplis' + self.CHAR_DELIM
+            ellipsis = self.CHAR_DELIM + 'ellipsis' + self.CHAR_DELIM
+            len_ellipsis = len(ellipsis)
             sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
             i = 0
             while True:
@@ -894,7 +895,7 @@ class TextPreprocessor:
                 if i == -1:
                      break
                 sents.append(sent[:i])
-                sent = sent[i + 2:]
+                sent = sent[i + len_ellipsis:]
             if sent:
                 sents.append(sent)
             return sents
