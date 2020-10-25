@@ -1174,20 +1174,37 @@ class TextPreprocessor:
             space_before = False
             for i, token in enumerate(tokens):
                 wform = token['FORM']
-                delim_pos = wform.rfind(self.CHAR_DELIM)
+                delim_pos = wform.find(self.CHAR_DELIM)
                 misc = token['MISC']
                 if delim_pos >= 0:
                     idx = int(wform[:delim_pos])
                     tag = wform[delim_pos:]
-                    mask = self.TAG_MASKS[tag]
-                    tag = tag[1:]
-                    orig = tags[tag][idx]
-                    token = tokens[i]
-                    token['FORM'] = mask
-                    misc[tag] = orig
-                    if space_before:
-                        text += ' '
-                    text += orig
+                    delim_pos2 = tag.find(self.CHAR_DELIM, delim_pos + 1)
+                    if delim_pos2 >= 0:
+                        typ = tag[1:delim_pos2]
+                        if typ == '':
+                            tag = tag[delim_pos2:]
+                            if tag == self.TAG_SHORTCUT:
+                                subst, orig = SHORTCUTS[idx]
+                                token['FORM'] = subst
+                                misc[self.TAG_SHORTCUT] = orig
+                            else:
+                                raise ValueError('Unknow entity type "{}"'
+                                                     .format(tag))
+
+                        else:
+                            raise ValueError('Unknow entity type "{}"'
+                                                 .format(typ))
+                    else:
+                        mask = self.TAG_MASKS[tag]
+                        tag = tag[1:]
+                        orig = tags[tag][idx]
+                        #token = tokens[i]
+                        token['FORM'] = mask
+                        misc[tag] = orig
+                        if space_before:
+                            text += ' '
+                        text += orig
                 elif wform in ['``', '(', '«']:
                     misc['SpaceAfter'] = 'No'
                     if space_before:
