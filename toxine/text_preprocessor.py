@@ -1179,22 +1179,10 @@ class TextPreprocessor:
                 if delim_pos >= 0:
                     idx = int(wform[:delim_pos])
                     tag = wform[delim_pos:]
-                    delim_pos2 = tag.find(self.CHAR_DELIM, 1)
-                    if delim_pos2 >= 0:
-                        typ = tag[1:delim_pos2]
-                        if typ == '':
-                            tag = tag[delim_pos2 + 1:]
-                            if tag == self.TAG_SHORTCUT:
-                                subst, orig = SHORTCUTS[idx]
-                                token['FORM'] = subst
-                                misc[self.TAG_SHORTCUT] = orig
-                            else:
-                                raise ValueError('Unknow entity "{}"'
-                                                     .format(tag))
-
-                        else:
-                            raise ValueError('Unknow entity type "{}"'
-                                                 .format(typ))
+                    if tag == self.TAG_SHORTCUT:
+                        subst, orig = SHORTCUTS[idx]
+                        token['FORM'] = subst
+                        misc[self.TAG_SHORTCUT] = orig
                     else:
                         mask = self.TAG_MASKS[tag]
                         tag = tag[1:]
