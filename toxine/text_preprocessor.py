@@ -1182,7 +1182,7 @@ class TextPreprocessor:
                     if tag == self.TAG_SHORTCUT:
                         subst, orig = self.SHORTCUTS[idx]
                         token['FORM'] = subst
-                        misc[self.TAG_SHORTCUT] = orig
+                        misc[self.TAG_SHORTCUT[2:]] = orig
                     else:
                         mask = self.TAG_MASKS[tag]
                         tag = tag[1:]
