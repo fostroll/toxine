@@ -671,8 +671,13 @@ class TextPreprocessor:
         # --- end of sentence w/o space after period ---
         def process(match):
             a, b = match.groups()
-            return a + '. ' + b if wform_isknown(b) or wform_isknown(a) else \
-                   match.group(0)
+            return a + '. ' + b if wform_isknown(a) or (
+                wform_isknown(b) and b.lower() not in [
+                    'com', 'org', 'edu', 'net', 'info',
+                    'de', 'cn', 'uk', 'ru', 'su', 'us', 'jp',
+                    'бг', 'бел', 'рф', 'срб', 'укр'
+                ]
+            ) else match.group(0)
         text = re_sub(r'(\w+)\.(\w+)', process, text)
         text = re_sub(r'(\w+)\.(\w+)', process, text)  # sic!
 
