@@ -682,8 +682,8 @@ class TextPreprocessor:
         # perion before of quotation:
         text = re_sub(r'(\w+)\.\s*(["`«„]\s*\b)', r'\g<1> . \g<2>', text)
 
-        # known bugs of russian nltk sent tokeinzer:
-        text = re_sub(r'\b(я|театр)\.', r'\g<1> .', text)
+        # known bugs of russian nltk punkt:
+        text = re_sub(r'\b(я|театр|нас)\.', r'\g<1> .', text)
 
         # --- known shortcuts ---
         '''
