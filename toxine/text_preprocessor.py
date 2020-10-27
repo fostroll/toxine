@@ -668,12 +668,6 @@ class TextPreprocessor:
                               .format(re_init, re_lname),
                           r' \g<1> \g<2> \g<3> ', text, flags=flags)
 
-        # period just before a word
-        text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
-
-        # точка после "я"
-        text = re_sub(r'\b([ёа-я]+)\.', r'\g<1> .', text)
-
         # --- end of sentence w/o space after period ---
         def process(match):
             a, b = match.groups()
@@ -681,6 +675,12 @@ class TextPreprocessor:
                    match.group(0)
         text = re_sub(r'(\w+)\.(\w+)', process, text)
         text = re_sub(r'(\w+)\.(\w+)', process, text)  # sic!
+
+        # period just before a word
+        text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
+
+        # точка после "я"
+        text = re_sub(r'\b(я)\.', r'\g<1> .', text)
 
         # --- known shortcuts ---
         '''
@@ -720,10 +720,10 @@ class TextPreprocessor:
         re_5 = r'\s+'
         #TODO: capitalization
         for a, b in [(r'({0}[иИ]{4}т{2}д{2}){1}',  r'и так далее'),
-                     (r'({0}[иИ]{4}т{2}п{2}){1}', r'и тому подобное'),
-                     (r'({0}[мМ]{3}б{2}){1}',     r'может быть'),
-                     (r'({0}[тТ]{3}е{2}){1}',     r'то есть'),
-                     (r'({0}[тТ]{3}к{2}){1}',     r'так как')]:
+                     (r'({0}[иИ]{4}т{2}п{2}){1}',  r'и тому подобное'),
+                     (r'({0}[мМ]{3}б{2}){1}',      r'может быть'),
+                     (r'({0}[тТ]{3}е{2}){1}',      r'то есть'),
+                     (r'({0}[тТ]{3}к{2}){1}',      r'так как')]:
             text = re_sub(a.format(re_0, re_1, re_2, re_3, re_4, re_5),
                           # если после сокращения идёт слово
                           # с заглавной буквы, то ставим перед ним точку
