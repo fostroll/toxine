@@ -884,8 +884,8 @@ class TextPreprocessor:
 
         :rtype: list
         """
-        text.replace('«', '``').replace('„', '``') \
-            .replace('»', "''").replace('“', "''")
+        text = text.replace('«', '``').replace('„', '``') \
+                   .replace('»', "''").replace('“', "''")
 
         sents = nltk_sent_tokenize(text, language='russian')
 
