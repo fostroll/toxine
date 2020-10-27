@@ -686,7 +686,7 @@ class TextPreprocessor:
         text = re_sub(r'(\w+)\.\s*(["`«„]\s*\b)', r'\g<1> . \g<2>', text)
 
         # known bugs of russian nltk punkt:
-        text = re_sub(r'\b(я|театр|нас)\.', r'\g<1> .', text)
+        text = re_sub(r'\b(я|театр|нас|прав)\.', r'\g<1> .', text)
 
         # --- known shortcuts ---
         '''
