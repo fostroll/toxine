@@ -679,7 +679,7 @@ class TextPreprocessor:
         # period just before a word
         text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
 
-        # perion before of quotation:
+        # period before of quotation:
         text = re_sub(r'(\w+)\.\s*(["`«„]\s*\b)', r'\g<1> . \g<2>', text)
 
         # known bugs of russian nltk punkt:
@@ -884,6 +884,9 @@ class TextPreprocessor:
 
         :rtype: list
         """
+        text.replace('«', '``').replace('„', '``') \
+            .replace('»', "''").replace('“', "''")
+
         sents = nltk_sent_tokenize(text, language='russian')
 
         re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁЯ-Я])')
