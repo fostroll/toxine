@@ -679,8 +679,8 @@ class TextPreprocessor:
         # period just before a word
         text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
 
-        # точка после "я"
-        text = re_sub(r'\b(я)\.', r'\g<1> .', text)
+        # known bugs of russian nltk sent tokeinzer:
+        text = re_sub(r'\b(я|театр)\.', r'\g<1> .', text)
 
         # --- known shortcuts ---
         '''
