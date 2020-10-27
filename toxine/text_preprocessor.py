@@ -679,6 +679,9 @@ class TextPreprocessor:
         # period just before a word
         text = re_sub(r'(^|\W)\.(\w)', r'\g<1>. \g<2>', text)
 
+        # perion before of quotation:
+        text = re_sub(r'(\w+)\.\s+(["`«„])', r'\g<1> . \g<2>', text)
+
         # known bugs of russian nltk sent tokeinzer:
         text = re_sub(r'\b(я|театр)\.', r'\g<1> .', text)
 
