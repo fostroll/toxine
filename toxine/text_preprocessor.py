@@ -635,7 +635,7 @@ class TextPreprocessor:
         text = text.replace(r'""', r' " ')
         text = re_sub(r',,?', r' , ', text)
         text = re_sub(r'№№?', r' № ', text)
-        # апостроф в начале или в конце слова - кавычки
+        # апостроф в начале или в конце строки - кавычки
         text = re_sub(r"^'|'$", '"', text)
         # если несколько символов ., ?, !, подряд, то если среди них есть
         # ?, то меняем всё на него, если есть !, то на него, иначе ставим
@@ -936,6 +936,19 @@ class TextPreprocessor:
         # NB: "" -> ``''
         tokens = nltk_word_tokenize(text, language='russian',
                                     preserve_line=True)
+        try:
+            idx = tokens.index("'")
+        except ValueError:
+            try:
+                idx = tokens.index("’")
+            except ValueError:
+                idx = -1
+        if idx > 0 and tokens[idx - 1].isalpha() \
+                   and tokens[idx + 1].isalpha() \
+                   and tokens[idx + 1].istitle():
+            tokens = tokens[:idx - 1] \
+                   + [tokens[idx - 1] + tokens[idx] + tokens[idx + 1] \
+                   + tokens[idx + 2:]]
         return tokens
 
     @staticmethod
