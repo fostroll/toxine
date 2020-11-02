@@ -940,9 +940,12 @@ class TextPreprocessor:
             idx = tokens.index("'")
         except ValueError:
             try:
-                idx = tokens.index("’")
+                idx = tokens.index('’')
             except ValueError:
-                idx = -1
+                try:
+                    idx = tokens.index('`')
+                except ValueError:
+                    idx = -1
         if idx > 0 and tokens[idx - 1].isalpha() \
                    and tokens[idx + 1].isalpha() \
                    and tokens[idx + 1].istitle():
