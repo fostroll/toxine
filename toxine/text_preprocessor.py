@@ -947,8 +947,8 @@ class TextPreprocessor:
                    and tokens[idx + 1].isalpha() \
                    and tokens[idx + 1].istitle():
             tokens = tokens[:idx - 1] \
-                   + [tokens[idx - 1] + tokens[idx] + tokens[idx + 1] \
-                   + tokens[idx + 2:]]
+                   + [tokens[idx - 1] + tokens[idx] + tokens[idx + 1]] \
+                   + tokens[idx + 2:]
         return tokens
 
     @staticmethod
