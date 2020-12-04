@@ -1285,8 +1285,8 @@ class TextPreprocessor:
         :param doc_id: id of the document. If None then all the corpus 
                        will be processed
         :type doc_id: str
-        :type add_global_columns: if True, the first line of output will be
-                                  CoNLL-U Plus "global.columns" metadata
+        :param add_global_columns: if True, the first line of output will be
+                                   CoNLL-U Plus "global.columns" metadata
         :return: the result of the processing
         :rtype: Parsed CoNLL-U
         """
@@ -1320,3 +1320,53 @@ class TextPreprocessor:
             sents = list(sents)
             Conllu.save(sents, path, fix=False)
         return sents
+
+    def unmask_tokens(self, corpus, save_to=None, keep_empty=True,
+                      keep_tags=True, entity_map=None):
+        """Replace masked tokens to their real values.
+
+        :param corpus: path to CoNLL-U file or array of Parsed CoNLL-U
+        :type corpus: str|Iterable
+        :param save_to: path to the file to store result to. If you don't need
+                        to store result on disk, keep it None
+        :type save_to: str
+        :param keep_empty: if True, entities with no replacement mask stay as
+                           is
+        :param keep_tags: if True, do not remove Toxine's tags from the MISC
+                          field
+        :param entity_map: add specified tags to the MISC field instead of
+                           Toxine's tags
+        :type entity_map: dict({<toxine tag>: tuple(<new tag>, <value>)})
+        :return: the result of the processing
+        :rtype: Parsed CoNLL-U
+        """
+        def process():
+            if isinstance(corpus, str):
+                corpus = Conllu.load(corpus)
+            for sentence in corpus:
+                for token in sentence[0] if isinstance(sentence, tuple) else \
+                             sentence:
+                    misc = token['MISC']
+                    for tag, form in list(misc.items()):
+                        tag_ = self.DELIM + tag
+                        if tag_ in self.TAG_MASKS:
+                            subst = self.TAG_MASKS[tag_]
+                            if subst or not keep_empty:
+                                token['FORM'] = form
+                            if not keep_tags:
+                                misc.pop(tag)
+                            if entity_map:
+                                subst = entity_map.get(tag)
+                                if subst:
+                                    misc.update(subst if isinstance(subst,
+                                                                    dict) else
+                                                [subst])
+                            break
+                yield sentence
+
+        corpus = process()
+
+        if save_to:
+            Conllu.save(corpus, save_to, fix=False)
+            corpus = Conllu.load(save_to)
+        return corpus

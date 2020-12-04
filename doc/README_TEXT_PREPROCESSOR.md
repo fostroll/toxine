@@ -243,6 +243,32 @@ added to the result to make it consistent with the
 To save the result as *CoNLL-U* file, just specify the name of the resulting
 file in the **path** param.
 
+### Restore original tokens
+
+After corpus has been processed (e.g., Named-entity Recognition was made), you
+can return early substituted tokens to their place.
+```python
+sents = tp.unmask_tokens(corpus, save_to=None, keep_empty=True,
+                         keep_tags=True, entity_map=None):
+```
+Here, **corpus** is a name of the file in *CoNLL-U* format or a list/iterator
+of sentences in *Parsed CoNLL-U*.
+
+The result is returned in *Parsed CoNLL-U* format. To save the result as
+*CoNLL-U* file, just specify the name of the resulting file in the **save_to**
+param.
+
+If **keep_empty** is `True` (default), entities with no replacement mask stay
+as is.
+
+if **keep_tags**: is `True`, we won't remove ***Toxine***'s tags from the
+*MISC* field.
+
+Also, there is possibility to add new tags to the *MISC* field based on
+***Toxine***'s tags. For that purpose **entity_map** param is used. It contain
+a `dict` of mappings, e.g.:
+`{'EntityDate': ('NE', 'Date'), 'EntityPhone': ('NE', 'Phone')}`
+
 ### Supplements
 
 If you have a text piece in some variable and you need to just preprocess and
