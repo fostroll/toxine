@@ -1348,7 +1348,7 @@ class TextPreprocessor:
                              sentence:
                     misc = token['MISC']
                     for tag, form in list(misc.items()):
-                        tag_ = self.DELIM + tag
+                        tag_ = self.CHAR_DELIM + tag
                         if tag_ in self.TAG_MASKS:
                             subst = self.TAG_MASKS[tag_]
                             if subst or not keep_empty:
