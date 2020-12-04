@@ -245,8 +245,8 @@ file in the **path** param.
 
 ### Restore original tokens
 
-After corpus has been processed (e.g., Named-entity Recognition was made), you
-can return early substituted tokens to their place.
+After corpus has been processed (e.g., morphological parsing was made), you
+can return early substituted tokens to their original places.
 ```python
 sents = tp.unmask_tokens(corpus, save_to=None, keep_empty=True,
                          keep_tags=True, entity_map=None):
