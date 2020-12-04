@@ -1340,7 +1340,7 @@ class TextPreprocessor:
         :return: the result of the processing
         :rtype: Parsed CoNLL-U
         """
-        def process():
+        def process(corpus):
             if isinstance(corpus, str):
                 corpus = Conllu.load(corpus)
             for sentence in corpus:
@@ -1364,7 +1364,7 @@ class TextPreprocessor:
                             break
                 yield sentence
 
-        corpus = process()
+        corpus = process(corpus)
 
         if save_to:
             Conllu.save(corpus, save_to, fix=False)
