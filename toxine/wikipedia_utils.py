@@ -11,6 +11,7 @@ from corpuscula.utils import LOG_FILE, print_progress
 from corpuscula.wikipedia_utils import Wikipedia
 from toxine.text_preprocessor import TextPreprocessor
 
+
 class TokenizedWikipedia(Wikipedia):
     """Wrapper for Wikipedia corpus"""
 
