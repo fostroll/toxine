@@ -59,7 +59,7 @@ class TextPreprocessor:
 
         self.CHARS_PUNCT_ASIS = '+.,:;!?-'
         self.CHARS_PUNCT = '()/"\'«»“”„‟' + self.CHARS_PUNCT_ASIS
-        self.CHARS_ALLOWED = '$€%&~№0-9A-Za-zЁА-Яёа-я`’²³°' + self.CHARS_PUNCT
+        self.CHARS_ALLOWED = '_$€£₣%&~№0-9A-Za-zЁА-Яёа-я`’²³°' + self.CHARS_PUNCT
         self.CHARS_CAPITAL = ''.join(chr(i) for i in range(2**16)
                                                 if chr(i).istitle()
                                                and chr(i).isalpha())
@@ -511,7 +511,11 @@ class TextPreprocessor:
                 # поддерживаем urn'ы
                 scnt >= 2 and host
             )
-            if isuri:
+            # workaround for english names:
+            toks = match.group(0).split('.')
+            if re_match('(?:[A-Z]\.){1,4}[A-Z][A-Za-z]+', match.group(0)):
+                res = match.group(0).replace('.', '. ')
+            elif isuri:
                 head = tail = None
                 if host and not (scheme and user_login and user_passwd):
                     head = re_search('^([ёа-я]+[.-]?)[0-9a-z]', host)
@@ -1058,6 +1062,8 @@ class TextPreprocessor:
             # пробел
             ('\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009'
              '\u200A\u200B\u202F\u205F\u2060\u3000', ' '),
+            # пробел нулевой длины
+            ('\uFEFF', ''),
             # остальное - десятичный разделитель, булит, диакритические точки,
             # интерпункт
             ('\u02CC\u0307\u0323\u2022\u2023\u2043\u204C\u204D\u2219\u25E6'
