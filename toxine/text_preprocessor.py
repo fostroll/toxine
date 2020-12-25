@@ -58,7 +58,7 @@ class TextPreprocessor:
         re_char_delim = '\\' + self.CHAR_DELIM
 
         self.CHARS_PUNCT_ASIS = '+.,:;!?-'
-        self.CHARS_PUNCT = '()/"\'«»„“' + self.CHARS_PUNCT_ASIS
+        self.CHARS_PUNCT = '()/"\'«»“”„‟' + self.CHARS_PUNCT_ASIS
         self.CHARS_ALLOWED = '$€%&~№0-9A-Za-zЁА-Яёа-я`’²³°' + self.CHARS_PUNCT
         self.CHARS_CAPITAL = ''.join(chr(i) for i in range(2**16)
                                                 if chr(i).istitle()
@@ -887,8 +887,8 @@ class TextPreprocessor:
 
         :rtype: list
         """
-        text = text.replace('«', '``').replace('„', '``') \
-                   .replace('»', "''").replace('“', "''")
+        text = text.replace('«', '``').replace('“', '``').replace('„', "``") \
+                   .replace('»', "''").replace('”', "''").replace('‟', "''")
 
         sents = nltk_sent_tokenize(text, language='russian')
 
