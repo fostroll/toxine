@@ -946,7 +946,8 @@ class TextPreprocessor:
                     idx = tokens.index('`')
                 except ValueError:
                     idx = -1
-        if idx > 0 and tokens[idx - 1].isalpha() \
+        if idx > 0 and idx + 1 < len(tokens) \
+                   and tokens[idx - 1].isalpha() \
                    and tokens[idx + 1].isalpha() \
                    and tokens[idx + 1].istitle():
             tokens = tokens[:idx - 1] \
