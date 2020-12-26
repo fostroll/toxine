@@ -59,8 +59,10 @@ class TextPreprocessor:
 
         self.CHARS_PUNCT_ASIS = '+.,:;!?-'
         self.CHARS_PUNCT = '()/"\'«»“”„‟' + self.CHARS_PUNCT_ASIS
-        self.CHARS_ALLOWED = '_$€£₣%&~№0-9A-Za-zЁА-Яёа-я`’²³°' \
-                           + self.CHARS_PUNCT #+ 'єіїўқҳ'
+        self.CHARS_CURRENCY = '$¢£¤¥Ұ' \
+                            + ''.join(chr(x) for x in range(0x20a0, 0x20d0))  # '₠₡₢₣₤₥₦₧₨₩₪₫€₭₮₯₰₱₲₳₴₵₶₷₸₹₺₻₼₽₾₿...'
+        self.CHARS_ALLOWED = '_%&~№0-9A-Za-zЁА-Яёа-я`’²³°' \
+                           + self.CHARS_CURRENCY + self.CHARS_PUNCT #+ 'єіїўқҳ'
         self.CHARS_CAPITAL = ''.join(chr(i) for i in range(2**16)
                                                 if chr(i).istitle()
                                                and chr(i).isalpha())
