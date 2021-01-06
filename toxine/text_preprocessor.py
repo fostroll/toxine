@@ -255,7 +255,7 @@ class TextPreprocessor:
         )
         self.TAG_HASHTAG = self.register_tag('EntityHashtag')
         self.RE_NAMETAG = re_compile(
-            r'(?mu)(^|[\s(])(@' + self.CHAR_ALPHA + self.CHAR_ALNUM_
+            r'(?mu)(^|[\s(])(@[A-Za-z0-9._]'# + self.CHAR_ALPHA + self.CHAR_ALNUM_
           + r'{,138})\b(?!\S*' + re_char_delim + ')'
         )
         self.TAG_NAMETAG = self.register_tag('EntityNametag', mask='ссылка')
