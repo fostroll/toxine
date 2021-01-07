@@ -104,6 +104,7 @@ class TextPreprocessor:
                 (\.|\s|$)                                 # 9
             )|(?:
                 ([\u2660-\u27ff\U00010000-\U0010ffff])    # 10
+                (?!\#\S*)  # skip hashtags
             )|(?:
                 (^|[^)(:;=-])                             # 11
                 (\)\)+ | \(\(+)                           # 12
@@ -251,10 +252,11 @@ class TextPreprocessor:
         self.TAG_DATE = self.register_tag('EntityDate', mask='сегодня')
         self.RE_HASHTAG = re_compile(
 #            r'(?mu)(^|[\s(])(#' + self.CHAR_ALPHA + self.CHAR_ALNUM_
-            r'(?mu)(.)?(#' + self.CHAR_ALNUM_
-#            r'(?mu)(^|[\s(])?(#[' + char_alnum_
-#          + r'\u2660-\u27ff\U00010000-\U0010ffff]'
-          + r'{,138})\b(?!\S*' + re_char_delim + ')'
+#            r'(?mu)(.)?(#' + self.CHAR_ALNUM_
+            r'(?mu)(^|[\s(])?(#[' + char_alnum_
+          + '\u2660-\u27ff\U00010000-\U0010ffff]'
+          + r'{,138})(?!\S*' + re_char_delim + ')'
+#          + r'{,138})\b(?!\S*' + re_char_delim + ')'
         )
         self.TAG_HASHTAG = self.register_tag('EntityHashtag')
         self.RE_NAMETAG = re_compile(
