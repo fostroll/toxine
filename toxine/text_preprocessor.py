@@ -920,6 +920,9 @@ class TextPreprocessor:
                 sents.append(sent)
             return sents
 
+        def notempty(text):
+            return re_search('(?i)[0-9a-zёа-я]', text)
+
         sents_ = []
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
         for sent in sents:
@@ -928,13 +931,14 @@ class TextPreprocessor:
                 quot = match.group(0)
                 sents_[-1] += ' ' + quot
                 sent = sent[len(quot):]
-
+                if not notempty(sent):
+                    sents_[-1] += sent
+                    continue
             for s in parse_el(sent):
                 sents_.append(s)
 
         if kill_empty:
-            sents_ = list(filter(lambda x: re_search('(?i)[0-9a-zёа-я]', x),
-                                 sents_))
+            sents_ = list(filter(notempty, sents_))
 
         return sents_
 
