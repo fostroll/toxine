@@ -4,7 +4,7 @@
 ## *brat* annotations support
 
 [*brat*](https://brat.nlplab.org/) is a popular tool that is often used to
-label named entities. It allows annotate raw untokenized text blocks. Thus, it
+annotate texts. It allows annotate raw untokenized text blocks. Thus, it
 doesn't care of the borders of tokens. By default, we move borders of the
 annotations to the borders of tokens, so user don't have to be very accurate
 during text labeling.
@@ -51,6 +51,19 @@ worry about it.
 Also, the function receives other parameters that fit for ***Toxine***'s
 `TextPreprocessor.do_all()` method.
 
+**Note** that after you've had the result in *CoNNL-U* format, you may want to
+merge it with some other annotations of the same corpus. For achieve that, use
+methods from
+[***Corpuscula*** library](https://github.com/fostroll/corpuscula/blob/master/doc/README_CDICT.md)
+to merge *CoNLL-U* files:
+```python
+from corpuscula import Conllu
+Conllu.save(Conllu.merge(file1.conllu, file2.conllu', stop_on_error=False,
+                         log_file=None),
+            result.conllu)
+```
+
+---
 Other methods of the package are useful if you want to execute stages of the
 above process separately.
 
@@ -85,10 +98,10 @@ function returns the result as a generator of *Parsed CoNLL-U* data.
 from toxine.brat import make_ne_tags
 make_ne_tags(corpus, save_to=None, keep_originals=True)
 ```
-Process the **corpus** in CoNLL-U or Parsed CoNLL-U format such that MISC:bratT
-entities converts to MISC:NE entities supported by MorDL. Note, that if
-several bratT entities are linked to the one token, only first one will be
-used (it is allowed only one MISC:NE entity for the token).
+Process the **corpus** in *CoNLL-U* or *Parsed CoNLL-U* format such that
+MISC:bratT entities converts to MISC:NE entities supported by MorDL. Note,
+that if several bratT entities are linked to the one token, only first one
+will be used (it is allowed only one MISC:NE entity for the token).
 
 Param **save_to** is a path where result will be stored. If not specified, the
 function returns the result as a generator of *Parsed CoNLL-U* data.
