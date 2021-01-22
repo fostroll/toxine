@@ -58,9 +58,9 @@ methods from
 to merge *CoNLL-U* files:
 ```python
 from corpuscula import Conllu
-Conllu.save(Conllu.merge(file1.conllu, file2.conllu', stop_on_error=False,
+Conllu.save(Conllu.merge('file1.conllu', 'file2.conllu', stop_on_error=False,
                          log_file=None),
-            result.conllu)
+            'result.conllu')
 ```
 
 ---
