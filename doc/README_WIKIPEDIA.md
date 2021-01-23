@@ -9,8 +9,19 @@ Russian. Thus, it supports only Russian part of *Wikipedia*.
 
 ```python
 from toxine.wikipedia_utils import TokenizedWikipedia
-TokenizedWikipedia.articles()
+wiki = TokenizedWikipedia(lang='RU', fpath=None, silent=False)
+articles = wiki.articles()
 ```
+Params of the constructor:
+
+**lang**: specifies of what language *Wikipedia* dump you want to use. Only
+**lang**=`'RU'` is currently supported.
+
+**fpath**: path to the *Wikipedia* dump. If it downloaded in default location,
+keep it `None`.
+
+**silent**: suppress output.
+
 The method return articles in
 [*Parsed CoNLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
 format, that can be saved to
