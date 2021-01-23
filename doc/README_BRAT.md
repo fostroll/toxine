@@ -19,12 +19,14 @@ A standard way to convert *brat* filles to
 that:
 ```python
 from toxine.brat import brat_to_conllu
-brat_to_conllu(txt_fn, ann_fn, save_to=None, keep_tokens=True,
+brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens=True,
                make_ne=False, keep_originals=True, cdict_path=None,
                **kwargs)
 ```
 
 Params **txt_fn**, **ann_fn** are paths to the *brat* `txt` and `ann` files.
+If **ann_fn** is `None` (default), an extension of **txt_fn** file will be
+changed to `.ann`.
 
 Param **save_to** is a path where result will be stored. If not specified,
 the function returns the result as a generator of
@@ -62,6 +64,22 @@ Conllu.save(Conllu.merge('file1.conllu', 'file2.conllu', stop_on_error=False,
                          log_file=None),
             'result.conllu')
 ```
+
+To create *brat* files from *CoNLL-U* to annotate, use:
+```python
+conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1)
+```
+Here, **corpus** is either a file in *CoNNL-U* or data in *Parsed CoNLL-U*
+format.
+
+Params **txt_fn**, **ann_fn** are paths to the *brat* `txt` and `ann` files.
+If **ann_fn** is `None` (default), an extension of **txt_fn** file will be
+changed to `.ann`.
+
+**spaces** is a number of spaces to use as word delimiter.
+
+Note, that we create empty `.ann` files. Use the function to get initial data
+for annotation.
 
 ---
 Other methods of the package are useful if you want to execute stages of the
