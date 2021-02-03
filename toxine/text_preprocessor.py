@@ -903,15 +903,15 @@ class TextPreprocessor:
 
         sents = nltk_sent_tokenize(text, language='russian')
 
-        re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁЯ-Я])')
+        re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁА-Я])')
         def parse_el(sent):
             sents = []
             ellipsis = self.CHAR_DELIM + 'ellipsis' + self.CHAR_DELIM
             len_ellipsis = len(ellipsis)
-            sent = re_ellipsis.sub('\g<1>{}\g<2>'.format(ellipsis), sent)
+            sent = re_ellipsis.sub(r'\g<1>{}\g<2>'.format(ellipsis), sent)
             i = 0
             while True:
-                i = sent.find(ellipsis, i)
+                i = sent.find(ellipsis)
                 if i == -1:
                      break
                 sents.append(sent[:i])
@@ -934,8 +934,9 @@ class TextPreprocessor:
                 if not notempty(sent):
                     sents_[-1] += sent
                     continue
-            for s in parse_el(sent):
-                sents_.append(s)
+            for _s in parse_el(sent):
+                for s in parse_el(_s):
+                    sents_.append(s)
 
         if kill_empty:
             sents_ = list(filter(notempty, sents_))
