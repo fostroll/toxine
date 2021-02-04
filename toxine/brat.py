@@ -7,6 +7,7 @@
 Provides tools for convertation brat text-bound annotations.
 """
 from corpuscula import Conllu
+import io
 import os
 import re
 from toxine import TextPreprocessor
@@ -209,7 +210,6 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens=True):
         done_len = 0
         ientities = iter(entities)
         entity = next(ientities, None)
-        import io
         with io.open(txt_fn, 'rt', encoding='utf-8', newline='') as f_in:
 
             for line in f_in:
