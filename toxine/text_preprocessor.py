@@ -901,9 +901,9 @@ class TextPreprocessor:
         text = text.replace('«', '``').replace('“', '``').replace('„', "``") \
                    .replace('»', "''").replace('”', "''").replace('‟', "''")
 
-        sents = nltk_sent_tokenize(text, language='russian')
+        sents_ = nltk_sent_tokenize(text, language='russian')
 
-        re_ellipsis = re_compile(r'(\.\.\.)\s+([A-ZЁА-Я])')
+        re_ellipsis = re_compile(r'(\.\.\.)\s+([0-9A-ZЁА-Я])')
         def parse_el(sent):
             sents = []
             ellipsis = self.CHAR_DELIM + 'ellipsis' + self.CHAR_DELIM
@@ -921,27 +921,36 @@ class TextPreprocessor:
             return sents
 
         def notempty(text):
-            return re_search('(?i)[0-9a-zёа-я]', text)
+            return re_search(r'[\d\w]', text)
 
-        sents_ = []
+        sents, is_join_candidate = [], False
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
-        for sent in sents:
+        for sent in sents_:
             match = re_quot.match(sent)
-            if sents_ and match:
+            if sents and match:
                 quot = match.group(0)
-                sents_[-1] += ' ' + quot
+                sents[-1] += ' ' + quot
                 sent = sent[len(quot):]
-                if not notempty(sent):
-                    sents_[-1] += sent
+                if not notempty(sent) or sent[0] in '!?.':
+                    sents[-1] += sent
+                    ending = sent[-1]
+                    if ending in '!?.':
+                        is_join_candidate = True
                     continue
-            for _s in parse_el(sent):
-                for s in parse_el(_s):
-                    sents_.append(s)
+            for s_ in parse_el(sent):
+                for s in parse_el(s_):
+                    if is_join_candidate and s[0] in '!?.':
+                        sents[-1] += s
+                    else:
+                        sents.append(s)
+                    ending = s[-1]
+                    if ending in '!?.':
+                        is_join_candidate = True
 
         if kill_empty:
-            sents_ = list(filter(notempty, sents_))
+            sents = list(filter(notempty, sents))
 
-        return sents_
+        return sents
 
     @staticmethod
     def word_tokenize(text):
@@ -950,8 +959,17 @@ class TextPreprocessor:
         :rtype: list
         """
         # NB: "" -> ``''
-        tokens = nltk_word_tokenize(text, language='russian',
-                                    preserve_line=True)
+        tokens_ = nltk_word_tokenize(text, language='russian',
+                                     preserve_line=True)
+        tokens, is_join_candidate = [], False
+        for token in tokens_:
+            if is_join_candidate and token[0] in '!?.':
+                tokens[-1] += token
+            else:
+                tokens.append(token)
+            ending = token[-1]
+            if ending in '!?.':
+                is_join_candidate = True
         try:
             idx = tokens.index("'")
         except ValueError:
