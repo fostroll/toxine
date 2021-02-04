@@ -932,12 +932,13 @@ class TextPreprocessor:
                 sents[-1] += ' ' + quot
                 sent = sent[len(quot):]
                 if not notempty(sent):
-                    if sent:
-                        if is_join_candidate and sent[0] in '!?.':
-                            sents[-1] += sent
-                        else:
-                            sents.append(s)
-                        is_join_candidate = sent[-1] in '!?.'
+                    sents[-1] += sent
+                    #if sent:
+                    #    if is_join_candidate and sent[0] in '!?.':
+                    #        sents[-1] += sent
+                    #    else:
+                    #        sents.append(sent)
+                    #    is_join_candidate = sent[-1] in '!?.'
                     continue
             for s_ in parse_el(sent):
                 for s in parse_el(s_):
