@@ -921,7 +921,7 @@ class TextPreprocessor:
             return sents
 
         def notempty(text):
-            return re_search(r'[0-9A-ZЁА-Я]', text)
+            return re_search(r'[\d\w]', text)
 
         sents, is_join_candidate = [], False
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
@@ -933,13 +933,11 @@ class TextPreprocessor:
                 sent = sent[len(quot):]
                 if not notempty(sent):
                     if sent:
-                        if sent[0] in '!?.':
+                        if is_join_candidate and sent[0] in '!?.':
                             sents[-1] += sent
                         else:
                             sents.append(s)
-                        ending = sent[-1]
-                        if ending in '!?.':
-                            is_join_candidate = True
+                        is_join_candidate = sent[-1] in '!?.'
                     continue
             for s_ in parse_el(sent):
                 for s in parse_el(s_):
@@ -947,9 +945,7 @@ class TextPreprocessor:
                         sents[-1] += s
                     else:
                         sents.append(s)
-                    ending = s[-1]
-                    if ending in '!?.':
-                        is_join_candidate = True
+                    is_join_candidate = s[-1] in '!?.'
 
         if kill_empty:
             sents = list(filter(notempty, sents))
@@ -971,9 +967,7 @@ class TextPreprocessor:
                 tokens[-1] += token
             else:
                 tokens.append(token)
-            ending = token[-1]
-            if ending in '!?.':
-                is_join_candidate = True
+            is_join_candidate = token[-1] in '!?.'
         try:
             idx = tokens.index("'")
         except ValueError:
@@ -1234,7 +1228,6 @@ class TextPreprocessor:
                 print_progress(sent_no, end_value=None, step=1000,
                                file=LOG_FILE)
             sent_no += 1
-            #if re_search('(?i)[0-9a-zёа-я]', sent):
             wforms = self.word_tokenize(sent)
             tokens = Conllu.from_sentence(wforms)
             text = ''
@@ -1254,7 +1247,6 @@ class TextPreprocessor:
                         mask = self.TAG_MASKS[tag]
                         tag = tag[1:]
                         orig = tags[tag][idx]
-                        #token = tokens[i]
                         token['FORM'] = mask
                         misc[tag] = orig
                         if space_before:
