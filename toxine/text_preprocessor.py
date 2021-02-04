@@ -921,7 +921,7 @@ class TextPreprocessor:
             return sents
 
         def notempty(text):
-            return re_search(r'[\d\w]', text)
+            return re_search(r'[0-9A-ZЁА-Я]', text)
 
         sents, is_join_candidate = [], False
         re_quot = re_compile(r'\d+' + '\\' + self.TAG_QUOTATION_END)
@@ -931,11 +931,15 @@ class TextPreprocessor:
                 quot = match.group(0)
                 sents[-1] += ' ' + quot
                 sent = sent[len(quot):]
-                if not notempty(sent) or sent[0] in '!?.':
-                    sents[-1] += sent
-                    ending = sent[-1]
-                    if ending in '!?.':
-                        is_join_candidate = True
+                if not notempty(sent):
+                    if sent:
+                        if sent[0] in '!?.':
+                            sents[-1] += sent
+                        else:
+                            sents.append(s)
+                        ending = sent[-1]
+                        if ending in '!?.':
+                            is_join_candidate = True
                     continue
             for s_ in parse_el(sent):
                 for s in parse_el(s_):
