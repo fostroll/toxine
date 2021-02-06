@@ -126,3 +126,37 @@ function returns the result as a generator of *Parsed CoNLL-U* data.
 
 If param **keep_originals** is `True` (default), original MISC:bratT entities
 will be stayed intact. Elsewise, they will be removed.
+
+### Renewal of the *brat* annotations
+
+If we have a *brat* annotations for some txt-file already done, and we have to
+change that txt slightly, next method helps you to adjust the annotation for
+new version of the txt:
+```python
+renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to, rewrite=False)
+```
+Here, **old_txt_fn** is a path to the old txt-file; **old_ann_fn** - a path to
+the old ann-file; **new_txt_fn** - a path to the new txt file; and
+**save_new_ann_to** is a path where the renewed ann will be saved to.
+
+Param **rewrite**: if `True`, allow **save_new_ann_to** be equal to
+**old_ann_fn**. Default is `False`.
+
+If you have multiple changes in ann-files, use:
+```python
+renew_ann_dir(old_dir, new_dir, recursive=True, rewrite=False,
+              ignore_absent=False)
+```
+The method runs `renew_ann()` for all ann-files in the directory **old_dir**.
+The directory must also contain corresponding txt-files.
+
+The directory **new_dir** must contain new versions of the txt-files. Renewed
+ann-files will be also stored there.
+
+If the param **rewrite** is `True`, the method doesn't throw an error if
+**new_dir** already contain ann-files that need to be created. In that case
+these files will be rewritten. Default is `False`.
+
+Param **ignore_absent**: if ``True``, don't throw an error if some txt-file in
+the **old_dir** directory doesn't have a corresponding txt-file in the
+**new_dir**. Default is ``False``.
