@@ -142,6 +142,23 @@ the old ann-file; **new_txt_fn** - a path to the new txt file; and
 Param **rewrite**: if `True`, allow **save_new_ann_to** be equal to
 **old_ann_fn**. Default is `False`.
 
+---
+**NB**: To use this method, you need to install the
+[*python-Levenshtein*](https://pypi.org/project/python-Levenshtein/) library
+first.
+
+If you work on *MS Windows*, it can be difficult to install the original
+version from *PyPI* (you need proper C-compiler for that). As workaround, you
+might consider to use already compiled version distributed as Python wheels
+archive from
+[here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-levenshtein)
+
+Download whl-file corresponding to your *Python* version and run:
+```bash
+pip install <path to whl-file>
+```
+---
+
 If you have multiple changes in ann-files, use:
 ```python
 renew_ann_dir(old_dir, new_dir, recursive=True, rewrite=False,

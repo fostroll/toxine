@@ -50,6 +50,13 @@ start *Python* interpreter and execute:
 >>> nltk.download('punkt')
 ```
 
+**NB:** If you plan to use methods for *brat* annotations renewal, you need to
+install the
+[*python-Levenshtein*](https://pypi.org/project/python-Levenshtein/) library.
+See more on the
+[*brat* annotations support](https://github.com/fostroll/toxine/blob/master/doc/README_BRAT.md)
+page.
+
 ## Usage
 
 [Text Preprocessor](https://github.com/fostroll/toxine/blob/master/doc/README_TEXT_PREPROCESSOR.md)
