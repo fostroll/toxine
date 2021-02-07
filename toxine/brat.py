@@ -593,6 +593,11 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
         old_txt = f.read()
     with io.open(new_txt_fn, 'rt', encoding='utf-8', newline='') as f:
         new_txt = f.read()
+        if '\r' in new_txt:
+            print('WARNING: The new txt file ("{}") file contain "CR" '
+                  'symbols that may cause errors ("nonprintable characters") '
+                  'in brat engine. Consider to remove "CR" symbols from new '
+                  'txt file and renew annotations again'.format(new_txt_fn))
     with open(old_ann_fn, 'rt', encoding='utf-8') as f:
         old_ann = f.read().split('\n')
     transfer_map, shift, prev_idx = list(range(len(old_txt) + 1)), 0, 0
@@ -617,7 +622,7 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
             transfer_map[idx] += shift
     new_ann = []
     len_old_txt, len_new_txt = len(old_txt), len(new_txt)
-    old_aids, new_aids = set(), set()
+    old_aids, new_aids, aid_map, all_spans = set(), set(), {}, {}
     for line_no, ann in enumerate(old_ann, start=1):
         ann = ann.split('\t')
         if not ann:
@@ -635,72 +640,89 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                         'ERROR: Position "{}" in line {} is outside of ' \
                         'bounds of the file {}' \
                             .format(idx_, line_no, old_ann_fn)
-                    # search for transfer not to None
-                    for idx in transfer_map[idx_:]:
-                        if idx is not None:
-                            # if we have a start of the fragment
-                            if not span:
+                    # if we have a start of the fragment
+                    if not span:
+                        # search for transfer not to None
+                        for idx in transfer_map[idx_:]:
+                            if idx is not None:
                                 if idx == len_new_txt:
                                     idx = None
                                 else:
-                                    # if the old fragment starts with ' ',
+                                    # if the old fragment starts after ' ',
                                     # the new one should do, too
-                                    if idx_ == 0 or old_txt[idx_ - 1] == ' ':
+                                    if idx_ == 0 \
+                                    or old_txt[idx_ - 1].isspace():
                                         for i in range(idx, 0, -1):
-                                            if new_txt[i - 1] == ' ':
+                                            if new_txt[i - 1].isspace():
                                                 idx = i
                                                 break
                                         else:
                                             idx = 0
                                     # anyway, we can't point to ' '
                                     for i in range(idx, len_new_txt):
-                                        if new_txt[i] != ' ':
+                                        if not new_txt[i].isspace():
                                             idx = i
                                             break
                                     else:
                                         idx = None
                                     idx0 = idx
-                            # end of the fragment
-                            else:
-                                if idx < idx0:
-                                    idx = idx0
-                                # if the old fragment ends with ' ',
-                                # the new one should do, too
-                                if idx_ == len_old_txt \
-                                or old_txt[idx_] == ' ':
-                                    for i in range(idx, len_new_txt):
-                                        if new_txt[i] == ' ':
+                                if idx is None:
+                                    token = None
+                                else:
+                                    span.append(idx)
+                                    token = str(idx)
+                                break
+                        else:
+                            break
+                    # end of the fragment
+                    else:
+                        for idx in reversed(transfer_map[:idx_ + 1]):
+                            if idx is not None:
+                                if idx <= idx0:
+                                    idx = None
+                                else:
+                                    # if the old fragment ends with ' ',
+                                    # the new one should do, too
+                                    if idx_ == len_old_txt \
+                                    or old_txt[idx_].isspace():
+                                        for i in range(idx, len_new_txt):
+                                            if new_txt[i].isspace():
+                                                idx = i
+                                                break
+                                        else:
+                                            idx = len_new_txt
+                                    # anyway, we don't want to have ' '
+                                    # in the end
+                                    for i in range(idx, 0, -1):
+                                        if not new_txt[i - 1].isspace():
                                             idx = i
                                             break
                                     else:
-                                        idx = len_new_txt
-                                # anyway, we don't want to have ' ' in the end
-                                for i in range(idx, 0, -1):
-                                    if new_txt[i - 1] != ' ':
-                                        idx = i
-                                        break
+                                        idx = None
+                                if idx is None:
+                                    token = None
                                 else:
-                                    idx = None
-                            if idx is None:
-                                token = None
-                            else:
-                                span.append(idx)
-                                token = str(idx)
+                                    span.append(idx)
+                                    token = str(idx)
+                                break
+                        else:
                             break
-                    else:
-                        break
                 if token is None or (token in old_aids
                                  and token not in new_aids):
-                    chunk_new = None
-                    break
+                    token = aid_map.get(token)
+                    if not token:
+                        chunk_new = None
+                        break
                 chunk_new.append(token)
             if span:
+                if len(span) != 2:
+                    print(span)
                 assert len(span) == 2, 'ERROR: Invalid line {} in {} file' \
                                            .format(line_no, old_ann_fn)
                 for span_ in spans:
                     if span[0] >= span_[0] and span[0] < span_[1]:
                         span[0] = span_[1]
-                    if span[1] >= span_[0] and span[1] < span_[1]:
+                    if span[1] > span_[0] and span[1] <= span_[1]:
                         span[1] = span_[0]
                 if span[1] > span[0]:
                     spans.append(span)
@@ -713,9 +735,17 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
             else:
                 chunks_new.append(' '.join(chunk_new))
         if chunks_old and chunks_new:
+            if chunks_new:
+                chunks_new = ';'.join(chunks_new)
+                if chunks_new in all_spans:
+                    aid_map[aid] = all_spans[chunks_new]
+                    continue
+                all_spans[chunks_new] = aid
+                chunks_new = [chunks_new]
+            else:
+                chunks_new = []
             new_ann.append(
-                '\t'.join([aid] + ([';'.join(chunks_new)] if chunks_new else
-                                   [])
+                '\t'.join([aid] + chunks_new
                                 + ([' '.join(fragments)] if fragments else
                                    ann[2:])))
             new_aids.add(aid)
