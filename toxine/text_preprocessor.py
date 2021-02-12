@@ -264,13 +264,15 @@ class TextPreprocessor:
           + r'{,138})\b(?!\S*' + re_char_delim + ')'
         )
         self.TAG_NAMETAG = self.register_tag('EntityNametag', mask='ссылка')
-        re_1 = r'\s*[A-ZЁА-Я][^"]+[.!?](?:\s*[A-ZЁА-Я][^"])*'
+        re_1 = r'\s*[A-ZЁА-Я][^{0}]+[.!?](?:\s*[A-ZЁА-Я][^{0}])*'
         self.RE_QUOTATION = re_compile(r'''(?xmu)
             (?:(")({0})("))|    # 1 - 3
-            (?:(``)({0})(''))|  # 4 - 6
-            (?:(«)({0})(»))|    # 7 - 9
-            (?:(„)({0})(“))     # 10 - 12
-        '''.format(re_1))
+            (?:(``)({1})(''))|  # 4 - 6
+            (?:(«)({2})(»))|    # 7 - 9
+            (?:(„)({3})(“))|    # 10 - 12
+            (?:(“)({4})(”))     # 13 - 15
+        '''.format(re_1.format('"'), re_1.format("`'"), re_1.format('«»'),
+                   re_1.format('„“'), re_1.format('“”')))
         self.TAG_QUOTATION_START = self.register_tag('QuotationStart', '``')
         self.TAG_QUOTATION_END = self.register_tag('QuotationEnd', "''")
 
@@ -599,6 +601,7 @@ class TextPreprocessor:
     def _tag_quotation(self, text):
         def process(match):
             res = match.group(0)
+            print(res)
             for i in range(1, 12, 3):
                 q1 = match.group(i)
                 if q1:
