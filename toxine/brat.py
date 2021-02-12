@@ -540,7 +540,9 @@ def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
                     the function returns the result as a generator of Parsed
                     CoNLL-U data.
     :param spaces: number of spaces to use as word delimiter.
-    """
+
+    Note, that we create empty `.ann` files. Use this function to get initial
+    data for annotation."""
     fn, fe = os.path.splitext(txt_fn)
     if fe != '.txt':
         print('WARNING: Extension of txt_fn must be ".txt"', file=sys.stderr)
@@ -725,18 +727,56 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                     if span[1] > span_[0] and span[1] <= span_[1]:
                         span[1] = span_[0]
                 if span[1] > span[0]:
-                    spans.append(span)
-                    fragments.append(new_txt[span[0]:span[1]])
+                    for i, span_ in enumerate(reversed(spans), start=1):
+                        if span[0] == span_[1]:
+                            span_[1] = span[1]
+                        elif span[1] == span_[0]:
+                            span_[0] = span[0]
+                        else:
+                            continue
+                        chunks_new[-i][-2:] = [str(span_[0]), str(span_[1])]
+                        fragments[-i] = new_txt[span_[0]:span_[1]]
+                        chunk_new = None
+                        break
+                    else:
+                        spans.append(span)
+                        if len(chunk_new) > 2:
+                            chunks_new.append(chunk_new[:-2])
+                        chunk_new = [str(span[0]), str(span[1])]
+                        fragments.append(new_txt[span[0]:span[1]])
                 else:
                     chunk_new = None
             if chunk_new is None:
                 if not chunks_new:
                     break
             else:
-                chunks_new.append(' '.join(chunk_new))
+                chunks_new.append(chunk_new)
+        if spans:
+            order_ = [i for _, i in sorted((x, i) for i, x in enumerate(spans))]
+            spans = [spans[i] for i in order_]
+            chunk_ = ' '.join(chunks_new[0])
+            chunks_new_ = [chunks_new[i + 1] for i in order_]
+            fragments_ = [fragments[i] for i in order_]
+            end_pos = None
+            chunks_new, fragments = [], []
+            for span, chunk_new, fragment in zip(spans, chunks_new_, fragments_):
+                if end_pos:
+                    for c in new_txt[end_pos:span[0]]:
+                        if c != ' ':
+                            chunks_new.append(chunk_new)
+                            fragments.append(fragment)
+                            break
+                    else:
+                        chunks_new[-1][1] = chunk_new[1]
+                        fragments[-1] += ' ' * (span[0] - end_pos) + fragment
+                else:
+                    chunks_new.append(chunk_new)
+                    fragments.append(fragment)
+                end_pos = span[1]
+            chunks_new[0].insert(0, chunk_)
         if chunks_old and chunks_new:
             if chunks_new:
-                chunks_new = ';'.join(chunks_new)
+                chunks_new = ';'.join(' '.join(x) for x in chunks_new)
                 if chunks_new in all_spans:
                     aid_map[aid] = all_spans[chunks_new]
                     continue

@@ -78,7 +78,7 @@ changed to `.ann`.
 
 **spaces** is a number of spaces to use as word delimiter.
 
-Note, that we create empty `.ann` files. Use the function to get initial data
+Note, that we create empty `.ann` files. Use this function to get initial data
 for annotation.
 
 ---
