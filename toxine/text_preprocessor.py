@@ -1022,8 +1022,9 @@ class TextPreprocessor:
                      tag_email=True, tag_uri=True, tag_phone=True,
                      tag_date=True, tag_hashtag=True, tag_nametag=True,
                      post_tag=None, split_unk=False, tag_unk=True,
-                     norm_punct=False, islf_eos=True, istab_eos=True,
-                     ignore_case=False, silent=False, sent_no=0, tags={}):
+                     is_tokenized=False, norm_punct=False, islf_eos=True,
+                     istab_eos=True, ignore_case=False, silent=False,
+                     sent_no=0, tags={}):
         """Make preprocessing (including tokenization) for the given *text*
 
         :param chars_allowed: allowed charset (all allowed symbols for use in
@@ -1060,9 +1061,11 @@ class TextPreprocessor:
                           placed only at the begin or/and at the end of the
                           token
         :param tag_unk: add special tag to the tokens with disallowed chars
-
+        :param is_tokenized: ``True`` meant that sentences may be splitted by
+                            the LF symbol, and words may be splitted by spaces
         :param norm_punct: normalize punctuations. Use it if you process
                            text chats or forum messages
+
         Params for ``norm_punct()``:
         :param islf_eos: LF symbol marks end of sentence; replace to "."
         :param istab_eos: TAB symbol marks end of sentence; replace to "."
@@ -1224,7 +1227,9 @@ class TextPreprocessor:
                                          istab_eos=istab_eos,
                                          ignore_case=ignore_case)
 
-        sents = self.sent_tokenize(text, kill_empty=True)
+        sents = [x for x in [x.strip() for x in text.split('\n')] if x] \
+                    if is_tokenized else \
+                self.sent_tokenize(text, kill_empty=True)
         sents_ = []
         #del par['text']
         for sent in sents:
@@ -1232,7 +1237,9 @@ class TextPreprocessor:
                 print_progress(sent_no, end_value=None, step=1000,
                                file=LOG_FILE)
             sent_no += 1
-            wforms = self.word_tokenize(sent)
+            wforms = [x for x in [x.strip() for x in re_split(r'\s+', text)]
+                        if x] if is_tokenized else \
+                     self.word_tokenize(sent)
             tokens = Conllu.from_sentence(wforms)
             text = ''
             space_before = False

@@ -523,6 +523,7 @@ def brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens=True,
              kwargs['post_tag'](tag_brat_annotations(text, delim))) \
             if 'post_tag' in kwargs else \
         tag_brat_annotations
+    kwargs['is_tokenized'] = True
 
     tp.do_all(**kwargs)
     return make_ne_tags(postprocess_brat_conllu(tp.save()), save_to=save_to,
@@ -647,6 +648,7 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                         # search for transfer not to None
                         for idx in transfer_map[idx_:]:
                             if idx is not None:
+                                idx0 = idx
                                 if idx == len_new_txt:
                                     idx = None
                                 else:
@@ -667,7 +669,7 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                                             break
                                     else:
                                         idx = None
-                                    idx0 = idx
+                                    #idx0 = idx
                                 if idx is None:
                                     token = None
                                 else:
@@ -681,7 +683,7 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                         for idx in reversed(transfer_map[:idx_ + 1]):
                             if idx is not None:
                                 if idx <= idx0:
-                                    idx = None
+                                    idx = span = None
                                 else:
                                     # if the old fragment ends with ' ',
                                     # the new one should do, too

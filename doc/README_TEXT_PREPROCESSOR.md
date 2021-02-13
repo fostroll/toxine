@@ -105,9 +105,9 @@ However, this method has a lot of parameters to control its behavior:
 tp.do_all(doc_id=None, chars_allowed=None, unescape_html=True, pre_tag=None,
           tag_emoji=True, tag_xml=True, tag_email=True, tag_uri=True,
           tag_phone=True, tag_date=True, tag_hashtag=True, tag_nametag=True,
-          post_tag=None, split_unk=False, tag_unk=True, norm_punct=False,
-          islf_eos=True, istab_eos=True, ignore_case=False, silent=False,
-          sent_no=0, tags={})
+          post_tag=None, split_unk=False, tag_unk=True, is_tokenized=False,
+          norm_punct=False, islf_eos=True, istab_eos=True, ignore_case=False,
+          silent=False, sent_no=0, tags={})
 ```
 The method executes all preprocessing including sentence and word tokenization,
 normalizing punctuation (if needed), extracting some entities detected via
@@ -151,6 +151,9 @@ unallowed characters. Default is `False`.
 **tag_unk**: add a special tag for the tokens with unallowed chars. Default is
 `True`, i.e. tokens will be tagged. If `False`, that tokens will be silently
 removed from the text.
+
+**is_tokenized**: ``True`` meant that sentences may be splitted by
+the *LF* symbol, and words may be splitted by spaces. Default is `False`.
 
 **norm_punct**: normalize punctuation. It's not a *correction*, it's just
 *normalizing*, i.e. reduction of user's punctuation to some appropriate form with
