@@ -601,7 +601,6 @@ class TextPreprocessor:
     def _tag_quotation(self, text):
         def process(match):
             res = match.group(0)
-            print(res)
             for i in range(1, 12, 3):
                 q1 = match.group(i)
                 if q1:
