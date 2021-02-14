@@ -149,7 +149,7 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens=True):
                     anns_t[ann_id] = res[2:] + (line_no,)
                 except AssertionError:
                     raise ValueError('ERROR: Invalid annotation '
-                                     'in line {})'.format(line_no))
+                                     'in line {}:\n{})'.format(line_no, line))
 
         entities = []
         relations, equivalences, events, attributes, normalizations, notes = \
@@ -736,16 +736,49 @@ def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
                             span_[0] = span[0]
                         else:
                             continue
-                        chunks_new[-i][-2:] = [str(span_[0]), str(span_[1])]
-                        fragments[-i] = new_txt[span_[0]:span_[1]]
+                        ###
+                        frag_start, frag_end = span
+                        frags_ = new_txt[frag_start:frag_end].split('\n')
+                        fragment = ''
+                        chunk_new = [str(frag_start), str(frag_end)]
+                        for i, frag in enumerate(frags_):
+                            frag_len = len(frag)
+                            if frag_len:
+                                frag_end = frag_start + frag_len
+                                frag_start = frag_end + 1
+                                chunk_new[0] += ' ' + str(frag_end) + \
+                                                ';' + str(frag_start)
+                                fragment += frag + ' '
+                        fragment += frags_[-1]
+                        chunks_new[-i][-2:] = chunk_new
+                        fragments[-i] = fragment
+                        ###
+                        #chunks_new[-i][-2:] = [str(span_[0]), str(span_[1])]
+                        #fragments[-i] = new_txt[span_[0]:span_[1]]
                         chunk_new = None
                         break
                     else:
                         spans.append(span)
                         if len(chunk_new) > 2:
                             chunks_new.append(chunk_new[:-2])
-                        chunk_new = [str(span[0]), str(span[1])]
-                        fragments.append(new_txt[span[0]:span[1]])
+                        ###
+                        frag_start, frag_end = span
+                        frags_ = new_txt[frag_start:frag_end].split('\n')
+                        fragment = ''
+                        chunk_new = [str(frag_start), str(frag_end)]
+                        for i, frag in enumerate(frags_[:-1]):
+                            frag_len = len(frag)
+                            if frag_len:
+                                frag_end = frag_start + frag_len
+                                frag_start = frag_end + 1
+                                chunk_new[0] += ' ' + str(frag_end) + \
+                                                ';' + str(frag_start)
+                                fragment += frag + ' '
+                        fragment += frags_[-1]
+                        fragments.append(fragment)
+                        ###
+                        #chunk_new = [str(span[0]), str(span[1])]
+                        #fragments.append(new_txt[span[0]:span[1]])
                 else:
                     chunk_new = None
             if chunk_new is None:
