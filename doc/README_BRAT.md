@@ -19,7 +19,7 @@ A standard way to convert *brat* filles to
 that:
 ```python
 from toxine.brat import brat_to_conllu
-brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens=True,
+brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens='smart',
                make_ne=False, keep_originals=True, cdict_path=None,
                **kwargs)
 ```
@@ -33,9 +33,10 @@ the function returns the result as a generator of
 [*Parsed CoNLL-U*](https://github.com/fostroll/corpuscula/blob/master/doc/README_PARSED_CONLLU.md)
 data.
 
-If param **keep_tokens** is `True` (default), the function adjusts borders
-of annotations to the borders of text tokens. If `False`, the borders are left
-as is, so some tokens may be splitted.
+If param **keep_tokens** is `True`, the function adjusts borders of
+annotations to the borders of text tokens. If `False`, the borders are left as
+is, so some tokens may be splitted. ``'smart'`` (default) means split tokens
+only if they really should be splitted.
 
 If param **make_ne** is ``True``, *brat* "T" entities will convert to MISC:NE
 entities supported by ***MorDL***. Note, that if several *brat* "T" entities
@@ -88,7 +89,7 @@ above process separately.
 ```python
 from toxine.brat import embed_brat_text_bound_annotations
 embed_brat_text_bound_annotations(txt_fn, ann_fn, save_to=None,
-                                  keep_tokens=True)
+                                  keep_tokens='smart')
 ```
 Converts `txt` and `ann` *brat* files to the text file with embedded
 annotations.
@@ -98,9 +99,10 @@ Params **txt_fn**, **ann_fn** are paths to the *brat* `txt` and `ann` files.
 Param **save_to** is a path where result will be stored. If not specified, the
 function returns the result as a generator of text data.
 
-If param **keep_tokens** is `True` (default), the function adjusts borders
-of annotations to the borders of text tokens. If `False`, the borders are left
-as is, so some tokens may be splitted.
+If param **keep_tokens** is `True`, the function adjusts borders of
+annotations to the borders of text tokens. If `False`, the borders are left as
+is, so some tokens may be splitted. ``'smart'`` (default) means split tokens
+only if they really should be splitted.
 
 ```python
 from toxine.brat import postprocess_brat_conllu
