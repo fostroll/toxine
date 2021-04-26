@@ -53,7 +53,7 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens='smart'):
             off = tuple(off.split())  # (start, stop)
             assert len(off) == 2
             offsets.append(off)
-        return 'T', tid, name, *offsets
+        return ('T', tid, name, *offsets)
 
     def process_relation(text):
         text = text.split('\t')
@@ -67,12 +67,12 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens='smart'):
             arg = tuple(arg.split(':'))  # (role, tid)
             assert len(arg) == 2
             arguments.append(arg)
-        return 'R', rid, name, *arguments
+        return ('R', rid, name, *arguments)
 
     def process_equivalence(text):
         text = text.split('\t')
         assert len(text) == 2 and text[0] == '*'
-        return '*', '*', *text[1].split()  # (name, tid, ...)
+        return ('*', '*', *text[1].split())  # (name, tid, ...)
 
     def process_event(text):
         text = text.split('\t')
@@ -85,7 +85,7 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens='smart'):
             arg = tuple(arg.split(':'))  # (name, tid) | (role, tid)
             assert len(arg) == 2
             arguments.append(arg)
-        return 'E', eid, *arguments
+        return ('E', eid, *arguments)
 
     def process_attribute(text):
         text = text.split('\t')
@@ -93,7 +93,7 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens='smart'):
         aid, ann = text
         ann = ann.split() + ['']  # [name, tid, value]
         assert len(ann) in [3, 4]
-        return 'A', aid, *ann[:3]
+        return ('A', aid, *ann[:3])
 
     def process_normalization(text):
         text = text.split('\t')
@@ -105,7 +105,7 @@ def embed_brat_annotations(txt_fn, ann_fn, save_to=None, keep_tokens='smart'):
         assert name == 'Reference'
         src = src.split(':')  # [service_name, service_id]
         assert len(src) == 2
-        return 'N', nid, title, tid, *src
+        return ('N', nid, title, tid, *src)
 
     def process_note(text):
         text = text.split('\t')
@@ -366,7 +366,9 @@ def postprocess_brat_conllu(corpus, save_to=None):
                 if token['FORM'] is None:
                     if BRAT_START_TAG in misc:
                         assert BRAT_START_TAG not in anns
-                        assert misc[BRAT_START_TAG][0] == 'T'
+                        assert misc[BRAT_START_TAG][0] == 'T', \
+                            'ERROR: Invalid annotation type "{}"' \
+                                .format(misc[BRAT_START_TAG])
                         anns.append(misc[BRAT_START_TAG])
                     elif BRAT_END_TAG in misc:
                         anns_ = []
