@@ -11,6 +11,7 @@ import glob
 import io
 import os
 import re
+import sys
 from toxine import TextPreprocessor
 import warnings
 
@@ -544,6 +545,7 @@ def brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens='smart',
     tp.register_tag(BRAT_START_TAG)
     tp.register_tag(BRAT_END_TAG)
 
+    kwargs['tag_hashtag'] = False
     kwargs['post_tag'] = \
         (lambda text, delim: \
              kwargs['post_tag'](tag_brat_annotations(text, delim))) \
