@@ -51,6 +51,13 @@ Param **cdict_path** (optional) allow to specify a path to the
 ***Corpuscula***'s corpus dictionary backup file. If you don't have it, don't
 worry about it.
 
+If you get errors like
+`AssertionError: ERROR: Invalid annotation type "<<T68][T69/Person"` during
+processing and have no idea about the reason of it, you might want to use
+param **store_raw_to** and specify a path where to save the intermediate
+result of the *brat* files processing (the raw template that is further
+converted to *CoNLL-U*).
+
 Also, the function receives other parameters that fit for ***Toxine***'s
 `TextPreprocessor.do_all()` method.
 
