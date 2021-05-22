@@ -1027,8 +1027,10 @@ class TextPreprocessor:
         """Make preprocessing (including tokenization) for the given *text*
 
         :param chars_allowed: allowed charset (all allowed symbols for use in
-                              "[]" regex)
-        :type chars_allowed: str
+                              "[]" regex). If ``False``, all symbols are
+                              allowed. `None` means default charset (see
+                              sources).
+        :type chars_allowed: str|False
 
         :param unescape_html: do we need to make back transformation from
                               escaped html
@@ -1081,8 +1083,9 @@ class TextPreprocessor:
         assert post_tag is None or callable(post_tag), \
             'ERROR: ext_post must be either callable or None'
 
-        chars_allowed = r'\s' + (chars_allowed if chars_allowed else
-                                 self.CHARS_ALLOWED)
+        if chars_allowed != False:
+            chars_allowed = r'\s' + (chars_allowed if chars_allowed else
+                                     self.CHARS_ALLOWED)
         SUBS = [
             #кавычки
             #('\u00AB\u00BB\u2039\u203A\u201E\u201A\u201C\u201F\u2018\u201B'
@@ -1142,7 +1145,9 @@ class TextPreprocessor:
 
                 _TAG_UNK = self.TAG_UNK.replace(self.CHAR_DELIM, '')
 
-                isunk = re_search(r'[^ ' + chars_allowed + ']', token)
+                isunk = re_search(r'[^ ' + chars_allowed + ']', token) \
+                            if chars_allowed else \
+                        False
                 if isunk:
                     # если вначале и/или в конце знаки пунктуации, то сохраняем их
                     p1 = p2 = ''

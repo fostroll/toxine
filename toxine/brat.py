@@ -556,6 +556,8 @@ def brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens='smart',
     tp.register_tag(BRAT_START_TAG)
     tp.register_tag(BRAT_END_TAG)
 
+    kwargs['chars_allowed'] = False
+    kwargs['tag_date'] = False
     kwargs['tag_hashtag'] = False
     kwargs['post_tag'] = \
         (lambda text, delim: \
@@ -608,7 +610,9 @@ def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
                 for feat, value in misc.items():
                     if feat.startswith('Entity'):
                         assert not has_entity
-                        form = value
+                        # workaround because brat can't display emojies
+                        # correctly
+                        form = '[emo]' if feat == 'EntityEmoji' else value
                         has_entity = True
                 print(form, end='', file=out_f)
 

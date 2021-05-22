@@ -117,9 +117,10 @@ If **doc_id** is specified, metod affects only the *document* with that
 *ID*. Elsewise, all the corpus will be processed.
 
 **chars_allowed**: charset considered valid. Tokens with others characters will
-be processed as *UNK* tokens. By default, **chars_allowed** contains the following
-character set: **$€%&~№0-9A-Za-zЁА-Яёа-я’²³°()/"\'«»„“+.,:;!?-**. You can change or replace
-it by any other chatset placed inside `[]` regex.
+be processed as *UNK* tokens. By default, **chars_allowed** contains the
+following character set: **$€%&~№0-9A-Za-zЁА-Яёа-я’²³°()/"\'«»„“+.,:;!?-**.
+You can change or replace it by any other chatset placed inside `[]` regex.
+If you set this param to `False`, all symbols will be allowed.
 
 **unescape_html**: do we need to make back transformation from escaped html.
 May be `True` (default), `False` or `callable`. The signature of the
