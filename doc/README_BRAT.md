@@ -75,7 +75,7 @@ Conllu.save(Conllu.merge('file1.conllu', 'file2.conllu', stop_on_error=False,
 
 To create *brat* files from *CoNLL-U* to annotate, use:
 ```python
-conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1)
+conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=3, short_spaces=1)
 ```
 Here, **corpus** is either a file in *CoNNL-U* or data in *Parsed CoNLL-U*
 format.
@@ -84,7 +84,10 @@ Params **txt_fn**, **ann_fn** are paths to the *brat* `txt` and `ann` files.
 If **ann_fn** is `None` (default), an extension of **txt_fn** file will be
 changed to `.ann`.
 
-**spaces** is a number of spaces to use as word delimiter.
+**spaces** is a number of spaces to use as word delimiter. Default `3`
+
+**short_spaces** is number of spaces to use as word delimiter inside
+multi-tokens (when *ID* field has a hyphen inside). Default `1`.
 
 Note, that we create empty `.ann` files. Use this function to get initial data
 for annotation.

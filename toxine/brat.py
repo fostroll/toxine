@@ -572,7 +572,7 @@ def brat_to_conllu(txt_fn, ann_fn=None, save_to=None, keep_tokens='smart',
                if make_ne else \
            postprocess_brat_conllu(tp.save(), save_to=save_to)
 
-def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
+def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=3, short_spaces=1):
     """Converts *corpus* in CoNLL-U format to txt and ann files used by brat.
 
     :param txt_fn: a path to the brat txt file.
@@ -582,6 +582,9 @@ def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
                     the function returns the result as a generator of Parsed
                     CoNLL-U data.
     :param spaces: number of spaces to use as word delimiter.
+    :param short_spaces: number of spaces to use as word delimiter
+                         inside multi-tokens (when ID field has a hyphen
+                         inside).
 
     Note, that we create empty `.ann` files. Use this function to get initial
     data for annotation."""
@@ -602,10 +605,20 @@ def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
                 print(file=out_f)
                 if 'newpar id' in sent[1]:
                     print(file=out_f)
-            for tok_no, tok in enumerate(sent[0]):
-                if tok_no:
-                    print(' ' * spaces, end='', file=out_f)
-                form, misc = tok['FORM'], tok['MISC']
+            is_next = None
+            short_start = short_end = None
+            for tok in sent[0]:
+                id_, form, misc = tok['ID'], tok['FORM'], tok['MISC']
+                if '.' in id_:
+                    continue
+                if '-' in id_:
+                    short_start, short_end, *_ = id_.split('-')
+                    continue
+                if is_next:
+                    print(' ' * (short_spaces
+                                     if short_end and not short_start else
+                                 spaces),
+                          end='', file=out_f)
                 has_entity = False
                 for feat, value in misc.items():
                     if feat.startswith('Entity'):
@@ -614,6 +627,11 @@ def conllu_to_brat(corpus, txt_fn, ann_fn=None, spaces=1):
                         # correctly
                         form = '[emo]' if feat == 'EntityEmoji' else value
                         has_entity = True
+                is_next = True
+                if short_end:
+                    short_start = None
+                if id_ == short_end:
+                    short_end = None
                 print(form, end='', file=out_f)
 
 def renew_ann(old_txt_fn, old_ann_fn, new_txt_fn, save_new_ann_to,
